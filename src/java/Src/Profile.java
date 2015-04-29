@@ -39,7 +39,7 @@ public class Profile {
 	/** The no of kernels. */
 	private int noOfKernels;
 	
-	/** The no of kernerl solutionAttributes. */
+	/** The no of kernel solutionAttributes. */
 	private int noOfKernerlVariables;
 	
 	/** The no of profile solutionAttributes. */
@@ -76,7 +76,7 @@ public class Profile {
 	 *
 	 * @param var the var
 	 */
-	public void addVaraiable(SolutionAttributes var) {
+	public void addVariable(SolutionAttributes var) {
 		solutionAttributes.put(var.getName(), var);
 	}
 
@@ -88,6 +88,11 @@ public class Profile {
 	public File getFile() {
 		return file;
 	}
+        
+        public void setFile(File thisfile)
+        {
+            file = thisfile;
+        }
 
 	/**
 	 * Gets the global score.
@@ -262,7 +267,7 @@ public class Profile {
 					
 					SolutionAttributes variable = new SolutionAttributes(name, type,
 							lbound, ubound, granularity, rateOfEvolution, value, dfault, flag, unit);
-					profile.addVaraiable(variable);
+					profile.addVariable(variable);
 				}
 
 				else if (hint.getName().equalsIgnoreCase("kernel")) {
@@ -454,22 +459,27 @@ public class Profile {
 	 * @param newValue value to be updated 
 	 */
 	 /* added by Jim novemeber 2012 to make setProfileScore more generic */
-	public void setProfileVariableValue(Profile profile, String varname, int newValue) {
+	public void setProfileVariableValue( String varname, double newValue) {
 	Hashtable elements = new Hashtable();
 	try {
-		Document XmlDoc = new SAXBuilder().build(profile.getFile());
+		Document XmlDoc = new SAXBuilder().build(this.file);
 	
 		Element root = XmlDoc.getRootElement();
 		Element graph = root.getChild(varname, root.getNamespace());
-		Element value = graph.getChild("value");
-		Integer inti = new Integer(newValue);
-		value.setText(inti.toString());
+                if(graph != null)
+                {
+                    Element value = graph.getChild("value");
+                    Double dubi = new Double(newValue);
+		value.setText(dubi.toString());
+                }
+                else
+                    System.out.println("couldn;t find child with name "+ varname);
+		
 	
 		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
 		String xmlString = outputter.outputString(XmlDoc);
 	
-		BufferedWriter writer = new BufferedWriter(new FileWriter(profile
-				.getFile().getAbsolutePath()));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(this.file.getAbsolutePath()));
 		writer.write(xmlString);
 		writer.close();
 	} catch (Exception pce) {
