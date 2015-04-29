@@ -5,9 +5,6 @@
  */
 
 $(document).ready(function () {
-
-
-
     var form = document.getElementById('fileUploadForm');
     var nextGen = document.getElementById("nextGeneration");
     var genCount = document.getElementById("generationCount");
@@ -19,6 +16,7 @@ $(document).ready(function () {
 //================================================
 
 //================================================
+// file upload detected
 
     form.addEventListener('change', function (event) {
         event.preventDefault();
@@ -82,7 +80,7 @@ $(document).ready(function () {
                 setTimeout(function () {
                     $('#tabs-byProfile').empty();
                     $('#tabs-byProfile').append(content);
-                }, 5000);
+                }, 8000);
             }
         };
         xhr.send(formData);
@@ -94,8 +92,9 @@ $(document).ready(function () {
 
 
 //================================================
+  // next Generation button pressed
+    
     nextGen.addEventListener('click', function () {
-
         var data = [];
         for (var i = 0; i < populationSize; i++) {
             data.push(document.getElementById("frame_" + i).src + "~" + document.getElementById("slider_" + i).value);
@@ -138,10 +137,8 @@ $(document).ready(function () {
     });
 
 //================================================
-
+// abort button pressed
     abort.addEventListener('click', function () {
-
-
         $('#tabs-byProfile').empty();
         $('#filelist').val('');
         $('#filesToUpload').replaceWith("<input class='filesToUpload' name='filesToUpload' id='filesToUpload' type='file' multiple />");
@@ -156,19 +153,35 @@ $(document).ready(function () {
     }, false);
 
 //================================================
-
+// reset button pressed
     reset.addEventListener('click', function () {
         for (var i = 0; i < populationSize; i++) {
             document.getElementById("slider_" + i).value = 5;
         }
     }, false);
 
-});
 
 //================================================
 
+ window.setInterval(function(){
+ for (var i = 0; i < populationSize; i++) {
+     var ttle = $('#frame_' + i).contents().find('title').text();
+ if ( ttle.indexOf("404") == -1){
+     $.get( $('#frame_' + i).src, function( data ) {
+  $('#frame_' + i).src = data ;
+});
+ }       
+}
+}, 5000);
+
+});
+
+//================================================
+// iframe icon clicked (preview tile)
 function frameClick(id) {
     var num = id.split("_");
     var src = document.getElementById("frame_" + num[1]).src;
     document.getElementById("previewFrame").src = src;
 }
+
+
