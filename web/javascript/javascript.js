@@ -183,5 +183,3 @@ function frameClick(id) {
     var src = document.getElementById("frame_" + num[1]).src;
     document.getElementById("previewFrame").src = src;
 }
-
-
