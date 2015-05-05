@@ -22,7 +22,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import Src.Controller;
 import com.google.gson.Gson;
 import java.util.ArrayList;
-import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -118,7 +117,7 @@ public class Dispatcher extends HttpServlet {
                     // Write the file to server in "/uploads/{sessionID}/"   
                     String clientDataPath = getServletContext().getInitParameter("clientFolder");
                     // TODO clear the client folder here
-                   // FileUtils.deleteDirectory(new File("clientDataPath"));
+                    // FileUtils.deleteDirectory(new File("clientDataPath"));
                     if (fileName.lastIndexOf("\\") >= 0) {
 
                         File input = new File(clientDataPath + session.getId() + "/input/");
@@ -147,7 +146,7 @@ public class Dispatcher extends HttpServlet {
             System.out.println(ex);
             //TODO show error page for website
         }
-        System.out.println("file uploaded" );
+        System.out.println("file uploaded");
         // TODO make the fileRepository Folder generic so it doesnt need to be changed
         // for each migration of the program to a different server
         File input = new File((String) session.getAttribute("inputFolder"));
@@ -161,17 +160,56 @@ public class Dispatcher extends HttpServlet {
         Artifact[] results = controller.processedArtifacts;
 
         session.setAttribute("Controller", controller);
+
+        ArrayList<ArrayList<String>> profiles = new ArrayList<>();
+       profiles.add(null); // to prevent a null pointer exception
+        for (Artifact result : results) {
+            System.out.println("profiles list size : " + profiles.size());
+            // split the result into its profile_x  and  fileName
+            String name = result.getFilename().substring(result.getFilename().indexOf("-") +1);
+            String[] parts = name.split("-");
+            String fileName = parts[1];  
+            int profileNum = Integer.parseInt(parts[0].substring(parts[0].indexOf("_") + 1));
+             System.out.println("current result =  FILE: " + fileName + "  PROFILE: " + profileNum);
+            // if current profile in the profile list is empty create that profile array entry and put the first result into that array
+            if (  profiles.get(profileNum) == null ) {
+          
+                 System.out.println("CREATING RESULT ["+fileName+"] TO [ "+profileNum+" ] ");
+                ArrayList<String> images = new ArrayList<>();
+                images.add("Client%20Data/" + session.getId() + "/output/" + result.getFile().getName());
+                profiles.add(profileNum, images); // add the updated results
+                // else get the profile array from the list of profiles and add the result to that array
+            } else {
+                 System.out.println("ADDING RESULT ["+fileName+"] TO [ "+profileNum+" ] ");
+                ArrayList<String> get = profiles.get(profileNum);
+                get.add("Client%20Data/" + session.getId() + "/output/" + result.getFile().getName());
+                profiles.remove(profileNum); // remove previous result(s)
+                profiles.add(profileNum, get); // add the updated results
+            }
+        }
+     
+        
+        System.out.println("\n size of profiles list : " +profiles.size());
+   
+        for (int i =0; i < profiles.size(); i ++) {
+            System.out.println("profile"+i);
+            ArrayList<String> get = profiles.get(i);
+            Iterator<String> iterator = get.iterator();
+            while ( iterator.hasNext()){
+                 String next = iterator.next();
+                System.out.println( next );
+            }
+        }
+        
+//        List<String> list = new ArrayList<String>();
+//        for (Artifact result : results) {
+//            //paths returned to view as "src" attributes for iframe table
+//            //example :  Client%20Data/6328C0BCAA80D3244E0A66F77BBD47D1/output/gen_1-profile_1-HTMLPage2.html
+//            list.add("Client%20Data/" + session.getId() + "/output/" + result.getFile().getName()); 
+//        }
         System.out.println("Initialisation of profiles for session (" + session.getId() + ") is complete\n"
                 + "Awaiting user to update parameters to generate next generation of results.\n");
-
-        List<String> list = new ArrayList<String>();
-        for (Artifact result : results) {
-            //paths returned to view as "src" attributes for iframe table
-            //example :  Client%20Data/6328C0BCAA80D3244E0A66F77BBD47D1/output/gen_1-profile_1-HTMLPage2.html
-            list.add("Client%20Data/" + session.getId() + "/output/" + result.getFile().getName()); 
-        }
-        String json = new Gson().toJson(list);
-
+        String json = new Gson().toJson(profiles);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);

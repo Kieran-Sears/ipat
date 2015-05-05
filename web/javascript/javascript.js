@@ -38,62 +38,70 @@ $(document).ready(function () {
                 files = null;
                 valid = false;
                 break;
-            }  
+            }
             formData.append('filesToUpload', file, file.name);
             document.getElementById("filelist").value += file.name + "\n";
         }
-        
+
         if (valid) {
-        
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'FileUpload', true);
-        xhr.onload = function () {
-            if (xhr.status !== 200) {
-                alert('Server Error. We apologise for the inconvenience and will be up and running again shortly.');
-                $('#tabs-byProfile').empty();
-            }
-        };
-        xhr.onreadystatechange = function ()
-        {
-            if (xhr.readyState === 4)
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'FileUpload', true);
+            xhr.onload = function () {
+                if (xhr.status !== 200) {
+                    alert('Server Error. We apologise for the inconvenience and will be up and running again shortly.');
+                    $('#tabs-byProfile').empty();
+                }
+            };
+            xhr.onreadystatechange = function ()
             {
-                var result = JSON.parse(xhr.responseText);
-                populationSize = result.length;
-                var content = "<table border='1px'><tr>";
-                //for all the results
-                for (var i = 0; i < result.length; i++) {
-                    // TODO : make profileTableArray[profile + num][], make imageTableArray[ image + name][]
-                    // split the name up {profile + num, image + name}
-                    // add result to profileTableArray[profile + num][i]
-                    // make imageTableArray[ image + name][i]
-                 
-                    
-                    if (i % 3 === 0) {
-                        content += "<tr>";
+                if (xhr.readyState === 4)
+                {
+                    var result = JSON.parse(xhr.responseText);
+                    populationSize = result.length;
+
+            
+
+                    // create the list for the profile tabs
+                    var tabsContent = "<div id='profileTabs'><ul>";
+                    for (var i = 0; i < result.length; i++) {
+                        tabsContent += "<li><a href='#byProfile" + (i + 1) + "'>Profile " + (i + 1) + "</a></li>";
                     }
-                    content += "<td class='cell'><iframe src='" + result[i] + "' scrolling='yes' class='cellFrames' id='frame_" + i + "' ></iframe><div id='overlay_" + i + "' class='overlay' onclick='frameClick(this.id)'></div><input type='range' id ='slider_" + i + "' min='0' max='10' value='5' step='1'  class='sliders'/></td>";
-                    if (i % 3 === 2) {
-                        content += "</tr>";
+                    tabsContent += " </ul>";
+
+                    // populate div sections for each profile tab
+                    for (var i = 0; i < result.length; i++) {
+                        var imageArray = result[i];
+                        var tableContent = "<div id= 'byProfile " + [i] + "'><table border='1px'><tr>";
+                        for (var j = 0; j < imageArray.length; j++) { // TODO  has error! need print statements to find out whats going on
+                            if (i % 3 === 0) {
+                                tableContent += "<tr>";
+                            }
+                            tableContent += "<td class='cell'><iframe src='" + result[i] + "' scrolling='yes' class='cellFrames' id='frame_" + i + "' ></iframe><div id='overlay_" + i + "' class='overlay' onclick='frameClick(this.id)'></div><input type='range' id ='slider_" + i + "' min='0' max='10' value='5' step='1'  class='sliders'/></td>";
+                            if (i % 3 === 2) {
+                                tableContent += "</tr>";
+                            }
+                        }
+                        tableContent += "</tr></table>";
+                        tabsContent += tableContent + "</div>";
+                        setTimeout(function () {
+                            $('#byProfile ' + i).empty();
+                            $('#byProfile ' + i).append(tableContent);
+                        }, 4000);
                     }
                 }
-                content += "</tr></table>";
-                setTimeout(function () {
-                    $('#tabs-byProfile').empty();
-                    $('#tabs-byProfile').append(content);
-                }, 8000);
-            }
-        };
-        xhr.send(formData);
-        genCount.value = 0;
-        genCount.value = parseInt(genCount.value) + 1;
-        valid = false;
+            };
+            xhr.send(formData);
+            genCount.value = 0;
+            genCount.value = parseInt(genCount.value) + 1;
+            valid = false;
         }
     }, false);
 
 
 //================================================
-  // next Generation button pressed
-    
+    // next Generation button pressed
+
     nextGen.addEventListener('click', function () {
         var data = [];
         for (var i = 0; i < populationSize; i++) {
@@ -163,16 +171,16 @@ $(document).ready(function () {
 
 //================================================
 
- window.setInterval(function(){
- for (var i = 0; i < populationSize; i++) {
-     var ttle = $('#frame_' + i).contents().find('title').text();
- if ( ttle.indexOf("404") == -1){
-     $.get( $('#frame_' + i).src, function( data ) {
-  $('#frame_' + i).src = data ;
-});
- }       
-}
-}, 5000);
+    window.setInterval(function () {
+        for (var i = 0; i < populationSize; i++) {
+            var ttle = $('#frame_' + i).contents().find('title').text();
+            if (ttle.indexOf("404") == -1) {
+                $.get($('#frame_' + i).src, function (data) {
+                    $('#frame_' + i).src = data;
+                });
+            }
+        }
+    }, 5000);
 
 });
 
