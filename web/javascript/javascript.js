@@ -44,7 +44,7 @@ $(document).ready(function () {
         }
 
         if (valid) {
-
+            populationSize = 0;
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'FileUpload', true);
             xhr.onload = function () {
@@ -58,37 +58,39 @@ $(document).ready(function () {
                 if (xhr.readyState === 4)
                 {
                     var result = JSON.parse(xhr.responseText);
-                    populationSize = result.length;
-
-            
+                    // get number of profiles in result
+                    var size = 0, key;
+                    for (key in result) {
+                        if (result.hasOwnProperty(key))
+                            size++;
+                    }
 
                     // create the list for the profile tabs
                     var tabsContent = "<div id='profileTabs'><ul>";
-                    for (var i = 0; i < result.length; i++) {
-                        tabsContent += "<li><a href='#byProfile" + (i + 1) + "'>Profile " + (i + 1) + "</a></li>";
+                    for (var i = 0; i < size; i++) {
+                        tabsContent += "<li><a href='#byProfile_" + (i) + "'>Profile " + (i) + "</a></li>";
                     }
-                    tabsContent += " </ul>";
-
-                    // populate div sections for each profile tab
-                    for (var i = 0; i < result.length; i++) {
-                        var imageArray = result[i];
-                        var tableContent = "<div id= 'byProfile " + [i] + "'><table border='1px'><tr>";
-                        for (var j = 0; j < imageArray.length; j++) { // TODO  has error! need print statements to find out whats going on
-                            if (i % 3 === 0) {
-                                tableContent += "<tr>";
-                            }
-                            tableContent += "<td class='cell'><iframe src='" + result[i] + "' scrolling='yes' class='cellFrames' id='frame_" + i + "' ></iframe><div id='overlay_" + i + "' class='overlay' onclick='frameClick(this.id)'></div><input type='range' id ='slider_" + i + "' min='0' max='10' value='5' step='1'  class='sliders'/></td>";
-                            if (i % 3 === 2) {
-                                tableContent += "</tr>";
-                            }
+                    tabsContent += " </ul></div>";
+               
+                    // populate div sections containing tables for each profile tab
+                    for (var i = 0; i < size; i++) {
+                        var cnt = i.toString();
+                        var res = result[cnt];
+                        var imageArray = res.toString().split(",");
+                        var tableContent = "<div id='byProfile_" + [i] + "'><table border='1px'><tr>";
+                        for (var j = 0; j < imageArray.length; j++) {
+                            tableContent += "<tr><td class='cell'><iframe src='" + imageArray[j] + "' scrolling='yes' class='cellFrames' id='frame_" + populationSize + "' ></iframe><div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div><input type='range' id ='slider_" + populationSize + "' min='0' max='10' value='5' step='1'  class='sliders'/></td></tr>";
+                            populationSize += 1;
                         }
-                        tableContent += "</tr></table>";
-                        tabsContent += tableContent + "</div>";
-                        setTimeout(function () {
-                            $('#byProfile ' + i).empty();
-                            $('#byProfile ' + i).append(tableContent);
-                        }, 4000);
+                        tableContent += "</table></div>";
+                        $('#byProfile_' + i).append(tabsContent);
                     }
+                    // populate the byProfiles tab 
+                    setTimeout(function () {
+                        alert("I'm here");
+                        $('#tabs-byProfile').empty();
+                        $('#tabs-byProfile').append(tabsContent);
+                    }, 4000);
                 }
             };
             xhr.send(formData);
@@ -98,6 +100,16 @@ $(document).ready(function () {
         }
     }, false);
 
+//                        for (var j = 0; j < imageArray.length; j++) {
+//                            if (i % 3 === 0) {
+//                                tableContent += "<tr>";
+//                            }
+//                            tableContent += "<td class='cell'><iframe src='" + imageArray[j] + "' scrolling='yes' class='cellFrames' id='frame_" + populationSize + "' ></iframe><div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div><input type='range' id ='slider_" + populationSize + "' min='0' max='10' value='5' step='1'  class='sliders'/></td>";
+//                            if (i % 3 === 2) {
+//                                tableContent += "</tr>";
+//                            }
+//                             populationSize += 1;
+//                        }
 
 //================================================
     // next Generation button pressed
@@ -133,6 +145,7 @@ $(document).ready(function () {
                 content += "</tr></table>";
 
                 setTimeout(function () {
+
                     $('#tabs-byProfile').empty();
                     $('#tabs-byProfile').append(content);
                 }, 5000);
@@ -191,3 +204,4 @@ function frameClick(id) {
     var src = document.getElementById("frame_" + num[1]).src;
     document.getElementById("previewFrame").src = src;
 }
+

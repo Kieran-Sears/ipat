@@ -22,6 +22,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import Src.Controller;
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -101,7 +102,7 @@ public class Dispatcher extends HttpServlet {
         upload.setSizeMax(maxFileSize);
 
         try {
-            // Parse the request to get file items
+            // Parse the request to images file items
             List fileItems = upload.parseRequest(request);
             // Process the uploaded file items
             Iterator i = fileItems.iterator();
@@ -154,62 +155,64 @@ public class Dispatcher extends HttpServlet {
         File profile = new File(getServletContext().getInitParameter("profileFolder"));
 
         System.out.println("folders created");
-        // TODO synchronize controller
+        // TODO synchronize controller?
         Controller controller = new Controller(input, output, profile);
         controller.initialArtifacts();
         Artifact[] results = controller.processedArtifacts;
-
         session.setAttribute("Controller", controller);
+        HashMap<String, ArrayList<String>> HM = new HashMap();
 
-        ArrayList<ArrayList<String>> profiles = new ArrayList<>();
-       profiles.add(null); // to prevent a null pointer exception
+        //   HM.add(null); // to prevent a null pointer exception
         for (Artifact result : results) {
-            System.out.println("profiles list size : " + profiles.size());
+            // cut out the generation (gen_y)
+            String name = result.getFilename().substring(result.getFilename().indexOf("-") + 1);
             // split the result into its profile_x  and  fileName
-            String name = result.getFilename().substring(result.getFilename().indexOf("-") +1);
             String[] parts = name.split("-");
-            String fileName = parts[1];  
-            int profileNum = Integer.parseInt(parts[0].substring(parts[0].indexOf("_") + 1));
-             System.out.println("current result =  FILE: " + fileName + "  PROFILE: " + profileNum);
-            // if current profile in the profile list is empty create that profile array entry and put the first result into that array
-            if (  profiles.get(profileNum) == null ) {
-          
-                 System.out.println("CREATING RESULT ["+fileName+"] TO [ "+profileNum+" ] ");
-                ArrayList<String> images = new ArrayList<>();
-                images.add("Client%20Data/" + session.getId() + "/output/" + result.getFile().getName());
-                profiles.add(profileNum, images); // add the updated results
-                // else get the profile array from the list of profiles and add the result to that array
+            String fileName = parts[1];
+            String profileNum = parts[0].substring(parts[0].indexOf("_") + 1);
+
+            // if the hashmap is empty add the first element to it
+            if (HM.isEmpty()) {
+                System.out.println("CREATING RESULT [" + fileName + "] TO [ " + profileNum + " ] ");
+                ArrayList<String> imageList = new ArrayList<>();
+                imageList.add("Client%20Data/" + session.getId() + "/output/" + result.getFile().getName());
+                HM.put(profileNum, imageList);
+
+                // if the hashmap is not empty 
             } else {
-                 System.out.println("ADDING RESULT ["+fileName+"] TO [ "+profileNum+" ] ");
-                ArrayList<String> get = profiles.get(profileNum);
-                get.add("Client%20Data/" + session.getId() + "/output/" + result.getFile().getName());
-                profiles.remove(profileNum); // remove previous result(s)
-                profiles.add(profileNum, get); // add the updated results
+                // check if hashmap already has the profile with a result in it and add the current result to this list
+                if (HM.containsKey(profileNum)) {
+                    System.out.println("ADDING RESULT [" + fileName + "] TO [ " + profileNum + " ] ");
+                    ArrayList<String> imageList = (ArrayList<String>) HM.get(profileNum);
+                    imageList.add("Client%20Data/" + session.getId() + "/output/" + result.getFile().getName());
+                    HM.put(profileNum, imageList);
+
+                    // if there are no matches, add a new hashmap element with the current result placed into a new list 
+                } else {
+                    System.out.println("CREATING RESULT [" + fileName + "] TO [ " + profileNum + " ] ");
+                    ArrayList<String> imageList = new ArrayList<>();
+                    imageList.add("Client%20Data/" + session.getId() + "/output/" + result.getFile().getName());
+                    HM.put(profileNum, imageList);
+                }
             }
         }
-     
-        
-        System.out.println("\n size of profiles list : " +profiles.size());
-   
-        for (int i =0; i < profiles.size(); i ++) {
-            System.out.println("profile"+i);
-            ArrayList<String> get = profiles.get(i);
-            Iterator<String> iterator = get.iterator();
-            while ( iterator.hasNext()){
-                 String next = iterator.next();
-                System.out.println( next );
-            }
-        }
-        
-//        List<String> list = new ArrayList<String>();
-//        for (Artifact result : results) {
-//            //paths returned to view as "src" attributes for iframe table
-//            //example :  Client%20Data/6328C0BCAA80D3244E0A66F77BBD47D1/output/gen_1-profile_1-HTMLPage2.html
-//            list.add("Client%20Data/" + session.getId() + "/output/" + result.getFile().getName()); 
+
+//        // check for correct output for the view
+//        Iterator<ArrayList<String>> iterator = HM.values().iterator();
+//        int tempCount = 0;
+//        while (iterator.hasNext()) {
+//            ArrayList<String> next = iterator.next();
+//            System.out.println("profile " + tempCount);
+//            tempCount++;
+//            for (String next1 : next) {
+//                System.out.println(next1);
+//            }
 //        }
+        
         System.out.println("Initialisation of profiles for session (" + session.getId() + ") is complete\n"
                 + "Awaiting user to update parameters to generate next generation of results.\n");
-        String json = new Gson().toJson(profiles);
+
+        String json = new Gson().toJson(HM);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);
