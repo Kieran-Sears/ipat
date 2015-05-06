@@ -53,10 +53,8 @@ $(document).ready(function () {
                     $('#tabs-byProfile').empty();
                 }
             };
-            xhr.onreadystatechange = function ()
-            {
-                if (xhr.readyState === 4)
-                {
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
                     var result = JSON.parse(xhr.responseText);
                     // get number of profiles in result
                     var size = 0, key;
@@ -65,32 +63,38 @@ $(document).ready(function () {
                             size++;
                     }
 
-                    // create the list for the profile tabs
-                    var tabsContent = "<div id='profileTabs'><ul>";
+                    // [layer one] create the list for the profile tabs 
+                    var content = "<div id='tabs-container'><ul class='tabs-menu'>";
                     for (var i = 0; i < size; i++) {
-                        tabsContent += "<li><a href='#byProfile_" + (i) + "'>Profile " + (i) + "</a></li>";
+                        if (i === 0) {
+                           content += "<li class='current'><a href='#byProfile_" + i + "'>Profile " + i + "</a></li>";
+                         
+                        } else {
+                            content += "<li><a href='#byProfile_" + i + "'>Profile " + i + "</a></li>";
+                        }
                     }
-                    tabsContent += " </ul></div>";
-               
+                    // [layer two] create div which will contain all the seporate tabs and their content this is needed for the CSS 
+                    content += " </ul> <div class='tab'>";
+                
                     // populate div sections containing tables for each profile tab
                     for (var i = 0; i < size; i++) {
                         var cnt = i.toString();
                         var res = result[cnt];
                         var imageArray = res.toString().split(",");
-                        var tableContent = "<div id='byProfile_" + [i] + "'><table border='1px'><tr>";
+                       content += "<div id='byProfile_" + i + "' class='tab-content'><table border='1px'><tr>";
                         for (var j = 0; j < imageArray.length; j++) {
-                            tableContent += "<tr><td class='cell'><iframe src='" + imageArray[j] + "' scrolling='yes' class='cellFrames' id='frame_" + populationSize + "' ></iframe><div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div><input type='range' id ='slider_" + populationSize + "' min='0' max='10' value='5' step='1'  class='sliders'/></td></tr>";
+                           content += "<td class='cell'><iframe src='" + imageArray[j] + "' scrolling='yes' class='cellFrames' id='frame_" + populationSize + "' ></iframe><div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div><input type='range' id ='slider_" + populationSize + "' min='0' max='10' value='5' step='1'  class='sliders'/></td></tr>";
                             populationSize += 1;
                         }
-                        tableContent += "</table></div>";
-                        $('#byProfile_' + i).append(tabsContent);
+                        content += "</table></div>";
                     }
+                    content += "</div></div>";
                     // populate the byProfiles tab 
                     setTimeout(function () {
-                        alert("I'm here");
                         $('#tabs-byProfile').empty();
-                        $('#tabs-byProfile').append(tabsContent);
-                    }, 4000);
+                        console.log(content);
+                        $('#tabs-byProfile').append(content);
+                    }, 3000);
                 }
             };
             xhr.send(formData);
@@ -99,17 +103,6 @@ $(document).ready(function () {
             valid = false;
         }
     }, false);
-
-//                        for (var j = 0; j < imageArray.length; j++) {
-//                            if (i % 3 === 0) {
-//                                tableContent += "<tr>";
-//                            }
-//                            tableContent += "<td class='cell'><iframe src='" + imageArray[j] + "' scrolling='yes' class='cellFrames' id='frame_" + populationSize + "' ></iframe><div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div><input type='range' id ='slider_" + populationSize + "' min='0' max='10' value='5' step='1'  class='sliders'/></td>";
-//                            if (i % 3 === 2) {
-//                                tableContent += "</tr>";
-//                            }
-//                             populationSize += 1;
-//                        }
 
 //================================================
     // next Generation button pressed
@@ -184,16 +177,27 @@ $(document).ready(function () {
 
 //================================================
 
-    window.setInterval(function () {
-        for (var i = 0; i < populationSize; i++) {
-            var ttle = $('#frame_' + i).contents().find('title').text();
-            if (ttle.indexOf("404") == -1) {
-                $.get($('#frame_' + i).src, function (data) {
-                    $('#frame_' + i).src = data;
-                });
-            }
-        }
-    }, 5000);
+//    window.setInterval(function () {
+//        for (var i = 0; i < populationSize; i++) {
+//            var ttle = $('#frame_' + i).contents().find('title').text();
+//            if (ttle.indexOf("404") == -1) {
+//                $.get($('#frame_' + i).src, function (data) {
+//                    $('#frame_' + i).src = data;
+//                });
+//            }
+//        }
+//    }, 5000);
+
+//================================================
+// tab clicked
+ $(".tabs-menu a").click(function (event) {
+        event.preventDefault();
+        $(this).parent().addClass("current");
+        $(this).parent().siblings().removeClass("current");
+        var tab = $(this).attr("href");
+        $(".tab-content").not(tab).css("display", "none");
+        $(tab).fadeIn();
+    });
 
 });
 

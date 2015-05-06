@@ -1,17 +1,8 @@
-<%-- 
-    Document   : index
-    Created on : 06-Mar-2015, 16:56:07
-    Author     : kieran
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <!DOCTYPE html>
 <html>
     <head>
         <title>IPAT Web Application</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <noscript><h3>This site requires JavaScript</h3></noscript>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
     <script src="http://malsup.github.com/jquery.form.js"></script> 
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -66,7 +57,7 @@
                       action="FileUpload" enctype="multipart/form-data">
                     <input class="filesToUpload" name="filesToUpload" id="filesToUpload" type="file" multiple />
                 </form>
-                <textarea id="filelist" name="filelist" rows="25" cols="70">${fileNames}</textarea>
+                <textarea id="filelist" name="filelist" rows="25" cols="70"></textarea>
             </div>
             <!--end of file choosing section-->
             <!--start of iframe table--> 
