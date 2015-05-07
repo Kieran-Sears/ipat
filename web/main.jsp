@@ -10,7 +10,7 @@
 <html>
     <head>
         <title>IPAT Web Application</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <noscript><h3>This site requires JavaScript</h3></noscript>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
     <script src="http://malsup.github.com/jquery.form.js"></script> 

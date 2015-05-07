@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+
 $(document).ready(function () {
     var form = document.getElementById('fileUploadForm');
     var nextGen = document.getElementById("nextGeneration");
@@ -14,7 +15,14 @@ $(document).ready(function () {
     var populationSize;
 
 //================================================
-
+    $(".tabs-menu a").click(function(event) {
+        event.preventDefault();
+        $(this).parent().addClass("current");
+        $(this).parent().siblings().removeClass("current");
+        var tab = $(this).attr("href");
+        $(".tab-content").not(tab).css("display", "none");
+        $(tab).fadeIn();
+    });
 //================================================
 // file upload detected
 
@@ -67,24 +75,30 @@ $(document).ready(function () {
                     var content = "<div id='tabs-container'><ul class='tabs-menu'>";
                     for (var i = 0; i < size; i++) {
                         if (i === 0) {
-                           content += "<li class='current'><a href='#byProfile_" + i + "'>Profile " + i + "</a></li>";
-                         
+                            content += "<li class='current'><a href='#byProfile_" + i + "'>Profile " + i + "</a></li>";
+
                         } else {
                             content += "<li><a href='#byProfile_" + i + "'>Profile " + i + "</a></li>";
                         }
                     }
                     // [layer two] create div which will contain all the seporate tabs and their content this is needed for the CSS 
                     content += " </ul> <div class='tab'>";
-                
+
                     // populate div sections containing tables for each profile tab
                     for (var i = 0; i < size; i++) {
                         var cnt = i.toString();
                         var res = result[cnt];
                         var imageArray = res.toString().split(",");
-                       content += "<div id='byProfile_" + i + "' class='tab-content'><table border='1px'><tr>";
+                        content += "<div id='byProfile_" + i + "' class='tab-content'><table border='1px'><tr>";
                         for (var j = 0; j < imageArray.length; j++) {
-                           content += "<td class='cell'><iframe src='" + imageArray[j] + "' scrolling='yes' class='cellFrames' id='frame_" + populationSize + "' ></iframe><div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div><input type='range' id ='slider_" + populationSize + "' min='0' max='10' value='5' step='1'  class='sliders'/></td></tr>";
+                            if (i % 3 === 0) {
+                                content += "<tr>";
+                            }
+                            content += "<td class='cell'><iframe src='" + imageArray[j] + "' scrolling='yes' class='cellFrames' id='frame_" + populationSize + "' ></iframe><div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div><input type='range' id ='slider_" + populationSize + "' min='0' max='10' value='5' step='1'  class='sliders'/></td></tr>";
                             populationSize += 1;
+                            if (i % 3 === 2) {
+                                content += "</tr>";
+                            }
                         }
                         content += "</table></div>";
                     }
@@ -176,29 +190,6 @@ $(document).ready(function () {
 
 
 //================================================
-
-//    window.setInterval(function () {
-//        for (var i = 0; i < populationSize; i++) {
-//            var ttle = $('#frame_' + i).contents().find('title').text();
-//            if (ttle.indexOf("404") == -1) {
-//                $.get($('#frame_' + i).src, function (data) {
-//                    $('#frame_' + i).src = data;
-//                });
-//            }
-//        }
-//    }, 5000);
-
-//================================================
-// tab clicked
- $(".tabs-menu a").click(function (event) {
-        event.preventDefault();
-        $(this).parent().addClass("current");
-        $(this).parent().siblings().removeClass("current");
-        var tab = $(this).attr("href");
-        $(".tab-content").not(tab).css("display", "none");
-        $(tab).fadeIn();
-    });
-
 });
 
 //================================================
