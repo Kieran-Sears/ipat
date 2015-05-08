@@ -86,16 +86,29 @@ public class newGenRequest extends HttpServlet {
         if (session == null) {
             System.out.println("Error, next generation button pressed before upload of input files.");
         } else {
-            // get slider values
+            // get slider values :
+            //+FreezeBGColour
+            //+source
+            //+ChangeGFContrast
+            //+score
+            //+ChangeFontSize
+            //+FreezeFGFonts
             Gson gson = new Gson();
             ArrayList<ArrayList <String> > profileValues = new ArrayList<>();
            HashMap data  = gson.fromJson(request.getParameter("data"), HashMap.class);
+            // cycle through keys converting them to strings
            Iterator it = data.keySet().iterator();
             while (it.hasNext()) {
-                String key = (String) it.next();
-                String[] value = (String[]) data.get(key);
+               String key = (String) it.next();
+                System.out.println(key);
+                ArrayList<String> values  =  (ArrayList<String>) data.get(key);
+                for (String value : values) {
+                    System.out.println(value);
+                }
             }
-             
+            
+          
+            
 //            String[] score = (String[]) request.getParameterValues("data['score']");
 //            String[] source =  (String[]) request.getParameterValues("data['source']");
 //            String[] FreezeBGColour =  (String[]) request.getParameterValues("data['FreezeBGColour']");
