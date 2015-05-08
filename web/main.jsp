@@ -20,8 +20,8 @@
     <script>$(function () {
             $("#tabs").tabs();
         });</script>
-    <link rel="stylesheet" type="text/css" href="css/style.css"> 
-    <link rel="stylesheet" type="text/css" href="css/tabStyle.css"> 
+    <link rel="stylesheet" type="text/css" href="css/StyleSheet.css"> 
+
 </head>
 <body>
     <!--boarder of program-->

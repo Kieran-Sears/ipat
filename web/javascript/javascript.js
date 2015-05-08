@@ -67,7 +67,7 @@ $(document).ready(function () {
                     // [layer one] create the list for the profile tabs 
                     var content = "<div id='tabs-container'><ul class='tabs-menu'>";
                     for (var i = 0; i < size; i++) {     
-                            content += "<li  id='li_"+i+"' onclick='tabClicked(this)'><a href='#byProfile_" + i + "'>Profile " + i + "</a></li>";
+                            content += "<li  id='li_"+i+"' onclick='tabClicked(this.id)'><a href='#byProfile_" + i + "'>Profile " + i + "</a></li>";
                     }
                     // [layer two] create div which will contain all the seporate tabs and their content this is needed for the CSS 
                     content += " </ul> <div class='tabstuff'>";
@@ -80,14 +80,10 @@ $(document).ready(function () {
                         content += "<div id='byProfile_" + i + "' class='tab-content'>";
                         // commented sections here allow the table cells to create new rows every 3 columns
                         for (var j = 0; j < imageArray.length; j++) {
-//                            if (i % 3 === 0) {
-//                                content += "<tr>";
-//                            }
-                            content += "<iframe src='" + imageArray[j] + "' scrolling='yes' class='cellFrames' id='frame_" + populationSize + "' ></iframe><div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div><input type='range' id ='slider_" + populationSize + "' min='0' max='10' value='5' step='1'  class='sliders'/>";
-                            populationSize += 1;
-//                            if (i % 3 === 2) {
-//                                content += "</tr>";
-//                            }
+                            content += "<div class='cell'><div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div><iframe src='"
+                                    + imageArray[j] + "' scrolling='no' class='cellFrames' id='frame_" + populationSize + "' ></iframe><input type='range' id ='slider_" 
+                                    + populationSize + "' min='0' max='10' value='5' step='1'  class='sliders'/></div>";
+                            populationSize += 1;         
                         }
                         content += "</div>";
                     }
@@ -95,7 +91,6 @@ $(document).ready(function () {
                     // populate the byProfiles tab 
                     setTimeout(function () {
                         $('#tabs-byProfile').empty();
-                        console.log(content);
                         $('#tabs-byProfile').append(content);
                     }, 3000);
                 }
@@ -190,9 +185,7 @@ function frameClick(id) {
 //================================================
 
 function tabClicked(item){
-    alert("tab clicked");
      $('[id^="byProfile_"]').hide();
      var num = item.slice(3);
-     alert(num);
     $('#byProfile_'+num).show();
 }
