@@ -111,11 +111,30 @@ $(document).ready(function () {
     // next Generation button pressed
 
     nextGen.addEventListener('click', function () {
-        var data = [];
+        
+        var data = {};
+        var source = [];
+        var score = [];
+        var FreezeBGColour = [];
+        var FreezeFGFonts = [];
+        var ChangeFontSize = [];
+        var ChangeGFContrast = [];
+        
         for (var i = 0; i < populationSize; i++) {
-            alert("frame_" + i);
-            data.push(document.getElementById("frame_" + i).src + "~" + document.getElementById("score_" + i).value);
+             source.push(document.getElementById("frame_" + i).src);
+             score.push( document.getElementById("score_" + i).value);
+              FreezeBGColour.push( document.getElementById("FreezeBGColour_" + i).value);
+              FreezeFGFonts.push( document.getElementById("FreezeFGFonts_" + i).value);
+              ChangeFontSize.push( document.getElementById("ChangeFontSize_" + i).value);
+              ChangeGFContrast.push( document.getElementById("ChangeGFContrast_" + i).value);
         }
+
+        data['source'] = source;
+        data['score'] =  score;
+        data['FreezeBGColour'] = FreezeBGColour;
+        data['FreezeFGFonts'] =   FreezeFGFonts;
+        data['ChangeFontSize'] =  ChangeFontSize;
+        data['ChangeGFContrast'] =  ChangeGFContrast;
 
         $('#tabs-byProfile').empty();
         $('#tabs-byProfile').html("<img src='" + image + "' />");
@@ -123,7 +142,7 @@ $(document).ready(function () {
         $.ajax({
             url: "newGen",
             type: "POST",
-            data: {data: data},
+            data: {data : JSON.stringify(data)},
             success: function (result) {
 
                 $('#loading').html("<img src='" + image + "' />");
