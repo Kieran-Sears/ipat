@@ -13,7 +13,7 @@ $(document).ready(function () {
     var reset = document.getElementById("resetScores");
     var image = "data/ajaxSpinner.gif";
     var populationSize;
-    
+
 
 
 //================================================
@@ -66,8 +66,8 @@ $(document).ready(function () {
 
                     // [layer one] create the list for the profile tabs 
                     var content = "<div id='tabs-container'><ul class='tabs-menu'>";
-                    for (var i = 0; i < size; i++) {     
-                            content += "<li  id='li_"+i+"' onclick='tabClicked(this.id)'><a href='#byProfile_" + i + "'>Profile " + i + "</a></li>";
+                    for (var i = 0; i < size; i++) {
+                        content += "<li  id='li_" + i + "' onclick='tabClicked(this.id)'><a href='#byProfile_" + i + "'>Profile " + i + "</a></li>";
                     }
                     // [layer two] create div which will contain all the seporate tabs and their content this is needed for the CSS 
                     content += " </ul> <div class='tabstuff'>";
@@ -80,10 +80,15 @@ $(document).ready(function () {
                         content += "<div id='byProfile_" + i + "' class='tab-content'>";
                         // commented sections here allow the table cells to create new rows every 3 columns
                         for (var j = 0; j < imageArray.length; j++) {
-                            content += "<div class='cell'><div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div><iframe src='"
-                                    + imageArray[j] + "' scrolling='no' class='cellFrames' id='frame_" + populationSize + "' ></iframe><input type='range' id ='slider_" 
-                                    + populationSize + "' min='0' max='10' value='5' step='1'  class='sliders'/></div>";
-                            populationSize += 1;         
+                            content += "<div class='cell'>"
+                                    + "<div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div>"
+                                    + "<iframe src='" + imageArray[j] + "' scrolling='no' class='cellFrames' id='frame_" + populationSize + "' ></iframe>"
+                                    + "<input type='radio' id='FreezeBGColour_" + populationSize + "' class='FreezeBGColour' >Freeze Background<br>"
+                                    + "<input type='radio' id='FreezeFGFonts_" + populationSize + "' class='FreezeFGFonts' >Freeze Writing<br>"
+                                    + "Score<br><input type='range' id ='score_" + populationSize + "' min='0' max='10' value='5' step='1'  class='score'/><br>"
+                                    + "Text Size<br><input type='range' id ='ChangeFontSize_" + populationSize + "' min='0' max='10' value='5' step='1'  class='ChangeFontSize'/><br>"
+                                    + "Text Contrast<br><input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='10' value='5' step='1'  class='ChangeGFContrast'/><br></div>";
+                            populationSize += 1;
                         }
                         content += "</div>";
                     }
@@ -108,7 +113,8 @@ $(document).ready(function () {
     nextGen.addEventListener('click', function () {
         var data = [];
         for (var i = 0; i < populationSize; i++) {
-            data.push(document.getElementById("frame_" + i).src + "~" + document.getElementById("slider_" + i).value);
+            alert("frame_" + i);
+            data.push(document.getElementById("frame_" + i).src + "~" + document.getElementById("score_" + i).value);
         }
 
         $('#tabs-byProfile').empty();
@@ -122,24 +128,47 @@ $(document).ready(function () {
 
                 $('#loading').html("<img src='" + image + "' />");
 
-                populationSize = result.length;
-                var content = "<table border='1px'><tr>";
-                for (var i = 0; i < result.length; i++) {
-                    if (i % 3 === 0) {
-                        content += "<tr>";
-                    }
-                    content += "<td class='cell'><iframe src='" + result[i] + "' scrolling='yes' class='cellFrames' id='frame_" + i + "' ></iframe><div id='overlay_" + i + "' class='overlay' onclick='frameClick(this.id)'></div><input type='range' id ='slider_" + i + "' min='0' max='10' value='5' step='1'  class='sliders'/></td>";
-                    if (i % 3 === 2) {
-                        content += "</tr>";
-                    }
+                // get number of profiles in result
+                var size = 0, key;
+                for (key in result) {
+                    if (result.hasOwnProperty(key))
+                        size++;
                 }
-                content += "</tr></table>";
 
+                // [layer one] create the list for the profile tabs 
+                var content = "<div id='tabs-container'><ul class='tabs-menu'>";
+                for (var i = 0; i < size; i++) {
+                    content += "<li  id='li_" + i + "' onclick='tabClicked(this.id)'><a href='#byProfile_" + i + "'>Profile " + i + "</a></li>";
+                }
+                // [layer two] create div which will contain all the seporate tabs and their content this is needed for the CSS 
+                content += " </ul> <div class='tabstuff'>";
+
+                // populate div sections containing tables for each profile tab
+                for (var i = 0; i < size; i++) {
+                    var cnt = i.toString();
+                    var res = result[cnt];
+                    var imageArray = res.toString().split(",");
+                    content += "<div id='byProfile_" + i + "' class='tab-content'>";
+                    // commented sections here allow the table cells to create new rows every 3 columns
+                    for (var j = 0; j < imageArray.length; j++) {
+                        content += "<div class='cell'>"
+                                    + "<div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div>"
+                                    + "<iframe src='" + imageArray[j] + "' scrolling='no' class='cellFrames' id='frame_" + populationSize + "' ></iframe>"
+                                    + "<input type='radio' id='FreezeBGColour_" + populationSize + "' class='FreezeBGColour' >Freeze Background<br>"
+                                    + "<input type='radio' id='FreezeFGFonts_" + populationSize + "' class='FreezeFGFonts' >Freeze Writing<br>"
+                                    + "<input type='range' id ='score_" + populationSize + "' min='0' max='10' value='5' step='1'  class='score'/>Score<br>"
+                                    + "<input type='range' id ='ChangeFontSize_" + populationSize + "' min='0' max='10' value='5' step='1'  class='ChangeFontSize'/>Text Size<br>"
+                                    + "<input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='10' value='5' step='1'  class='ChangeGFContrast'/>Text Contrast<br></div>";
+                        populationSize += 1;
+                    }
+                    content += "</div>";
+                }
+                content += "</div></div>";
+                // populate the byProfiles tab 
                 setTimeout(function () {
-
                     $('#tabs-byProfile').empty();
                     $('#tabs-byProfile').append(content);
-                }, 5000);
+                }, 3000);
 
             }
 
@@ -168,7 +197,7 @@ $(document).ready(function () {
 // reset button pressed
     reset.addEventListener('click', function () {
         for (var i = 0; i < populationSize; i++) {
-            document.getElementById("slider_" + i).value = 5;
+            document.getElementById("score_" + i).value = 5;
         }
     }, false);
 
@@ -184,8 +213,8 @@ function frameClick(id) {
 }
 //================================================
 
-function tabClicked(item){
-     $('[id^="byProfile_"]').hide();
-     var num = item.slice(3);
-    $('#byProfile_'+num).show();
+function tabClicked(item) {
+    $('[id^="byProfile_"]').hide();
+    var num = item.slice(3);
+    $('#byProfile_' + num).show();
 }

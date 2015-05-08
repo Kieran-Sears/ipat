@@ -162,7 +162,7 @@ public class Dispatcher extends HttpServlet {
         session.setAttribute("Controller", controller);
         HashMap<String, ArrayList<String>> HM = new HashMap();
 
-        //   HM.add(null); // to prevent a null pointer exception
+
         for (Artifact result : results) {
             // cut out the generation (gen_y)
             String name = result.getFilename().substring(result.getFilename().indexOf("-") + 1);

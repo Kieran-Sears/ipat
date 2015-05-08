@@ -75,6 +75,7 @@ height: 50%;
 
 .cellFrames {
    // alignment-adjust: central; 
+   display:inline;
     border: 0;
     height: 100%;
     width: 50%;
@@ -95,12 +96,6 @@ height: 50%;
     alignment-adjust: central;
 }
 
-.sliders{
-    position: relative;
-    height: 10%;
-    width: 50%;
-}
-
 .cell{
     width: 50%;
     height: 100%;
@@ -108,9 +103,10 @@ height: 50%;
     float:left;
 }
 .overlay{
+    display:inline;
     border-width: 3px;
     width: 50%;
-    height: 85%;
+    height: 57%;
     position: absolute;
     z-index: 2;
 }
@@ -163,4 +159,29 @@ font-size: 14px;
     padding: 10px;
     position: relative;
   // display: none;
+}
+
+.FreezeBGColour {
+     position:relative;
+
+}
+.FreezeFGFonts{
+     position:relative;
+
+}
+.ChangeFontSize{
+ position: relative;
+    height: 10%;
+    width: 50%;
+}
+.ChangeGFContrast{
+     position: relative;
+    height: 10%;
+    width: 50%;
+}
+
+.score{
+    position: relative;
+    height: 10%;
+    width: 50%;
 }
