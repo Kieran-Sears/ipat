@@ -88,11 +88,11 @@ public class HintsProcessor {
                         currentVariable.setRateOfEvolution(0.0);
                         vars.put(currentVarName, currentVariable);
                     }    
-            
+                Kernel changedKernel = new Kernel(kernel.getName(), vars);
                 //finally need to write this new kernel back to the profile in the  nextGen arraylist
                 //delete the old one the add the new one
                 thisProfile.removeKernel(kernel.getName());
-                thisProfile.addKernel(kernel);
+                thisProfile.addKernel(changedKernel);
                 } //end of code dealing with paragrpah kerel
         }//end of loop over all kernels
       }//end of code to freeze all aspects of foreground fonts
