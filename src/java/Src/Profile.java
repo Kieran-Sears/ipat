@@ -88,7 +88,11 @@ public class Profile {
 		solutionAttributes.put(var.getName(), var);
 	}
         
-        public void removeVariable(String varname)
+    /**
+     *
+     * @param varname
+     */
+    public void removeVariable(String varname)
         {
             solutionAttributes.remove(varname);
         }
@@ -102,7 +106,11 @@ public class Profile {
 		return file;
 	}
         
-        public void setFile(File thisfile)
+    /**
+     *
+     * @param thisfile
+     */
+    public void setFile(File thisfile)
         {
             file = thisfile;
         }
@@ -192,6 +200,10 @@ public class Profile {
 		}
 	}
 
+    /**
+     *
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -500,6 +512,11 @@ public class Profile {
 	}
 }
 
+    /**
+     *
+     * @param outputPath
+     * @return
+     */
     public boolean writeProfileToFile(String outputPath) {
         String copy = "";
         File file = this.getFile();

@@ -35,6 +35,10 @@ public class Dispatcher extends HttpServlet {
     String fileRepository;
     String webPath;
 
+    /**
+     *
+     * @throws ServletException
+     */
     public void init() throws ServletException {
         this.webPath = getServletConfig().getInitParameter("clientFolder");
         this.maxFileSize = Integer.parseInt(getServletConfig().getInitParameter("maxFileSize"));
@@ -42,6 +46,13 @@ public class Dispatcher extends HttpServlet {
         this.fileRepository = getServletConfig().getInitParameter("fileRepository");
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

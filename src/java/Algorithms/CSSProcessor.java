@@ -24,7 +24,9 @@ public class CSSProcessor implements Processor {
 
     private Hashtable cssLabels;
   
-    
+    /**
+     *
+     */
     public CSSProcessor() {
        this.cssLabels = setupCSSLabelStore();
       
@@ -35,6 +37,15 @@ public class CSSProcessor implements Processor {
     Artifact - the raw artifact to be processed
     index - the identifier for the profile
     */
+
+    /**
+     *
+     * @param profile
+     * @param artifact
+     * @param outputFolder
+     * @return
+     */
+    
     @Override
     public Artifact applyProfileToArtifact(Profile profile, Artifact artifact, String outputFolder) {
 
@@ -210,7 +221,11 @@ public class CSSProcessor implements Processor {
         return null;
     }
 
-     public Hashtable setupCSSLabelStore() {
+    /**
+     *
+     * @return
+     */
+    public Hashtable setupCSSLabelStore() {
         // Cardinal variables store
 
         // The fontfamilies.

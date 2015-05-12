@@ -9,12 +9,28 @@ public interface MetaHeuristic {
 
     //controller provides a set of profiles each having a name and aglobal score
     //metaheuristic updates its working memory
-    public void updateWorkingMemory(Profile[] evaluatedSolutions);
+
+    /**
+     *
+     * @param evaluatedSolutions
+     */
+        public void updateWorkingMemory(Profile[] evaluatedSolutions);
     //controller asks metaheuristic to generate howMany new solutions
     //metaheuristic makes them, updates the generation counter in the name and stores them
-    public void generateNextSolutions( int howMany);
+
+    /**
+     *
+     * @param howMany
+     */
+        public void generateNextSolutions( int howMany);
     //controller asks for one of the next generation of solutions
-    public Profile getNextGenProfileAtIndex(int which);
+
+    /**
+     *
+     * @param which
+     * @return
+     */
+        public Profile getNextGenProfileAtIndex(int which);
 
   
 

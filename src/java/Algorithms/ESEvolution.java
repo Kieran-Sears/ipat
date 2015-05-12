@@ -241,7 +241,12 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
         return newValue;
     }
     
-        @Override
+    /**
+     *
+     * @param which
+     * @return
+     */
+    @Override
     public Profile getNextGenProfileAtIndex(int which)
     {
         if(which <0)
@@ -261,7 +266,10 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
         
     }
     
-    
+    /**
+     *
+     * @param howMany
+     */
     @Override
     public void generateNextSolutions(int howMany) {
 
@@ -365,7 +373,13 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
  
     }
 // TODO read in the global scores from the profile.xml files
-    public Profile getProfileFromFile(File file) {
+
+    /**
+     *
+     * @param file
+     * @return
+     */
+        public Profile getProfileFromFile(File file) {
         Profile profile = new Profile(file);
         try {
             Document XmlDoc = new SAXBuilder().build(file);
@@ -459,7 +473,10 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
         return profile;
     }
 
-
+    /**
+     *
+     * @param evaluatedSolutions
+     */
     @Override
     public void updateWorkingMemory(Profile[] evaluatedSolutions) {
         int popmember = 0; //loop variable

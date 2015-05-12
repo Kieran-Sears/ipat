@@ -10,6 +10,13 @@ import Src.Profile;
  */
 public interface Processor {
 	
-	public Artifact applyProfileToArtifact(Profile profile, Artifact artifact, String outputFolder); 
+    /**
+     *
+     * @param profile
+     * @param artifact
+     * @param outputFolder
+     * @return
+     */
+    public Artifact applyProfileToArtifact(Profile profile, Artifact artifact, String outputFolder); 
 
 }

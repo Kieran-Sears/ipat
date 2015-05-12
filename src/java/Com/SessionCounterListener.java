@@ -9,21 +9,37 @@ package Com;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
  
+/**
+ *
+ * @author kieran
+ */
 public class SessionCounterListener implements HttpSessionListener {
  
   private static int totalActiveSessions;
  
-  public static int getTotalActiveSession(){
+    /**
+     *
+     * @return
+     */
+    public static int getTotalActiveSession(){
 	return totalActiveSessions;
   }
  
-  @Override
+    /**
+     *
+     * @param arg0
+     */
+    @Override
   public void sessionCreated(HttpSessionEvent arg0) {
 	totalActiveSessions++;
 	System.out.println("sessionCreated - add one session into counter");
   }
  
-  @Override
+    /**
+     *
+     * @param arg0
+     */
+    @Override
   public void sessionDestroyed(HttpSessionEvent arg0) {
 	totalActiveSessions--;
 	System.out.println("sessionDestroyed - deduct one session from counter");

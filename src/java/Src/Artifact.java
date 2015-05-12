@@ -17,25 +17,43 @@ public class Artifact {
 	private String filename;
 	private String filepath;
         
-	
-	public Artifact(File f){
+    /**
+     *
+     * @param f
+     */
+    public Artifact(File f){
 		this.file = f;
 		this.setupFile();
 	}
 
-	public File getFile() {
+    /**
+     *
+     * @return
+     */
+    public File getFile() {
 		return file;
 	}
 
-	public String getFilename() {
+    /**
+     *
+     * @return
+     */
+    public String getFilename() {
 		return filename;
 	}
 
-	public String getFilepath() {
+    /**
+     *
+     * @return
+     */
+    public String getFilepath() {
 		return filepath;
 	}
 	
-	public void setupFile(){
+    /**
+     *
+     */
+    public void setupFile(){
 		filename = file.getName();
 		filepath = file.getAbsolutePath();
 	}
