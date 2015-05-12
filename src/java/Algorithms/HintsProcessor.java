@@ -28,6 +28,12 @@ public class HintsProcessor {
     String currentVarName;
     
     ArrayList variablesAffected = new ArrayList();
+    ArrayList textKernels = new ArrayList();
+    textKernels.add("h1");
+    textKernels.add("h2");
+    textKernels.add("p");   
+          
+          
     
     //free back ground colour affects the page bg RGB values
     //relatively simple becuase these are profile level variables
@@ -36,7 +42,7 @@ public class HintsProcessor {
           variablesAffected.clear();
           variablesAffected.add("Page_bg_Red");
           variablesAffected.add("Page_bg_Blue");
-            variablesAffected.add("Page_bg_Green");          
+          variablesAffected.add("Page_bg_Green");          
           
             for (Iterator iterator = variablesAffected.iterator(); iterator.hasNext();)
               {
@@ -50,16 +56,13 @@ public class HintsProcessor {
                 //write back in the changed variable
                 thisProfile.addVariable(currentVariable);
               }
+           variablesAffected.clear(); 
+        }//end of code to freeze background colours
+      
     //next hint freezes the colour and size of the foreground fonts
     //so it need ot do it in each kernel that represents a paragraph style
-      if(thisProfile.isFreezeFGFonts())
-        {
-          variablesAffected.clear();
-          variablesAffected.add("h1");
-          variablesAffected.add("h2");
-          variablesAffected.add("p");   
-          
-          
+    if(thisProfile.isFreezeFGFonts())
+      {     
         //get a list of all the kernels present
         Enumeration enuKer = kernels.elements();
         // loop through each kernel in turn,
@@ -67,9 +70,10 @@ public class HintsProcessor {
         {
             //get the next kernel
             Kernel kernel = (Kernel) enuKer.nextElement();
-            //see if it is one of the paragraph types
-            if ((kernel.getName().equalsIgnoreCase("h1"))||(kernel.getName().equalsIgnoreCase("h2"))||(kernel.getName().equalsIgnoreCase("p")))
-              {
+            //see if it is one of the paragraph types affected
+            for (Iterator kerneliterator = textKernels.iterator(); kerneliterator.hasNext();)
+              if (kernel.getName().equalsIgnoreCase((String) kerneliterator.next()))
+                {
                 //get all of its variables
                 Hashtable vars = kernel.getVariables();
                 Enumeration eVar = vars.keys();
@@ -89,17 +93,59 @@ public class HintsProcessor {
                 //delete the old one the add the new one
                 thisProfile.removeKernel(kernel.getName());
                 thisProfile.addKernel(kernel);
-             } //end of code dealing with paragrpah kerel
+                } //end of code dealing with paragrpah kerel
         }//end of loop over all kernels
-        }//end of code to freeze al aspects of foreground fonts
+      }//end of code to freeze all aspects of foreground fonts
             
       
-           
-            
-            
-        }// end of loop mutating individual kernels
-     
-      
+    //next piece of code deals with the text size slider - 5 is the default value
+    // this version is deterministic because we dnt yet have a bias value in a soltion attribute as well as a rate of evolution
+    if(thisProfile.getChangeFontSize() !=5)
+      {
+        //state which variables are affected - just th font size in this case
+        variablesAffected.clear();
+          variablesAffected.add("font-size");
+            //get a list of all the kernels present
+        Enumeration enuKer = kernels.elements();
+        // loop through each kernel in turn,
+        while (enuKer.hasMoreElements()) 
+        {
+            //get the next kernel
+            Kernel kernel = (Kernel) enuKer.nextElement();
+            //see if it is one of the paragraph types affected
+            for (Iterator kerneliterator = textKernels.iterator(); kerneliterator.hasNext();)
+              if (kernel.getName().equalsIgnoreCase((String) kerneliterator.next()))
+                {
+                    //get all of its  variables
+                    Hashtable vars = kernel.getVariables();
+                    //loop through the ones ot be changed
+                    for (Iterator iterator = variablesAffected.iterator(); iterator.hasNext();)
+                     {
+                       currentVarName = (String) iterator.next();
+                       //get the variable from the local copy in the hashtable
+                       currentVariable = (SolutionAttributes) vars.get(currentVarName);
+                       //get the old value
+                       double value = currentVariable.getValue();
+                        //change it according to the hint 
+                       //THIS IS THE DETERMIISTIC BIT change by +/- 20% for each move away from 5
+                        value = value + value*0.2*(thisProfile.getChangeFontSize() -5); 
+                        //write this new value into the current variable
+                          currentVariable.setValue(value);
+                        //put this back into the hash table of vars for the kernel  
+                          vars.put(currentVarName, currentVariable);
+                     }    
+                    Kernel changedKernel = new Kernel(kernel.getName(), vars);
+                    //finally need to write this new kernel back to the local copy of the profile 
+                    //delete the old one the add the new one
+                    thisProfile.removeKernel(kernel.getName());
+                    thisProfile.addKernel(changedKernel);
+                }//end of relevant kernels
+   
+        
+        }//end of loop over all kernels
+        
+      }//end of text size case
+       
       
       // all hints have been dealt with - we can exit
       return thisProfile;
