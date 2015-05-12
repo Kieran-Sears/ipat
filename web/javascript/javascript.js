@@ -111,6 +111,7 @@ $(document).ready(function () {
     // next Generation button pressed
 
     nextGen.addEventListener('click', function () {
+         
         
         var data = {};
         var source = [];
@@ -192,7 +193,7 @@ $(document).ready(function () {
             }
 
         }, false);
-
+         populationSize = 0;
         genCount.value = parseInt(genCount.value) + 1;
     });
 

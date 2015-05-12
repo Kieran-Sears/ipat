@@ -303,10 +303,12 @@
       <variable>
         <name>color_blue_fg</name>
         <type>ordinal</type>
-        <lbound>0.0</lbound>
+        <lbound>0.0</lbound>FreezeBGColour
+
         <ubound>255.0</ubound>
         <granularity>1.0</granularity>
-        <rateOfEvolution>0.5</rateOfEvolution>
+        <rateOfEvolution>0.5</rateOfEvolution>FreezeBGColour
+
         <value>88.0</value>
         <default>128.0</default>
         <unit>pt</unit>
@@ -392,7 +394,8 @@
         <granularity>1.0</granularity>
         <rateOfEvolution>0.5</rateOfEvolution>
         <value>44.0</value>
-        <default>128.0</default>
+        <default>128.0</default>FreezeBGColour
+
         <unit>pt</unit>
         <flag>active</flag>
       </variable>
@@ -405,3 +408,4 @@
   </globalscore>
 </ipat>
 
+FreezeBGColour

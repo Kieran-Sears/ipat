@@ -94,7 +94,9 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
                     // System.out.println("........have set value in currentVariable ");
  
                     //change value in local copy of hashtable
-                    vars.replace(currentvarname, currentVariable);
+                 
+                    vars.put(currentvarname, currentVariable);
+                    
                     //currentVariable = (SolutionAttributes) vars.get(currentvarname);
                      //System.out.println("Value in vars is now" + currentVariable.getValue()    );
                  }
@@ -140,7 +142,7 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
                      currentVariable.setValue(newval);
                      //System.out.println("........have set value in currentVariable ");
                      //replace it in the local hash table
-                    vars.replace(currentvarname, currentVariable);
+                    vars.put(currentvarname, currentVariable);
                     currentVariable = (SolutionAttributes) vars.get(currentvarname);
                      //System.out.println("..............Value in vars is now" + currentVariable.getValue()    );
                      //System.out.println("....now changing the profile in the nextgen arraylist");
@@ -362,7 +364,7 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
         
  
     }
-//TODO  why do we have  this function with the same name in two different classes?
+// TODO read in the global scores from the profile.xml files
     public Profile getProfileFromFile(File file) {
         Profile profile = new Profile(file);
         try {
@@ -447,6 +449,8 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
                     }
                     Kernel kernel = new Kernel(kernelName, vars);
                     profile.addKernel(kernel);
+                } else if (hint.getName().equalsIgnoreCase("interaction")) {
+                // TODO 
                 }
             }
         } catch (Exception pce) {
