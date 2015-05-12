@@ -105,7 +105,8 @@ public class Interaction {
                         for (Integer value01 : value1) {
                             sum += value01;
                             int average = sum / value1.size();
-                            System.out.println(i + " ChangeGFContrast " + average); // TODO change for "ChangeGFContrast"
+                            profile.setChangeGFContrast(average);
+                            System.out.println(i + " ChangeGFContrast " + average);
                         }
                         break;
                     case "ChangeFontSize":
@@ -113,14 +114,16 @@ public class Interaction {
                         for (Integer value01 : value2) {
                             sum += value01;
                             int average = sum / value2.size();
-                            System.out.println(i + " ChangeFontSize " + average); // TODO change for "ChangeFontSize"
+                            profile.setChangeFontSize(average);
+                            System.out.println(i + " ChangeFontSize " + average); 
                         }
                         break;
                     case "FreezeBGColour":
                         ArrayList<String> value3 = (ArrayList<String>) get.get(key);
                         for (String value31 : value3) {
                             if (value31.equalsIgnoreCase("yes")) {
-                                System.out.println(i + " FreezeBGColour " + "yes");  // TODO apply profile "FreezeBGColour" = yes
+                                profile.setFreezeBGColour(true);
+                                System.out.println(i + " FreezeBGColour " + "yes");
                             } else {
                                 System.out.println(i + " FreezeBGColour " + "no");
                             }
@@ -130,7 +133,8 @@ public class Interaction {
                         ArrayList<String> value4 = (ArrayList<String>) get.get(key);
                         for (String value31 : value4) {
                             if (value31.equalsIgnoreCase("yes")) {
-                                System.out.println(i + " FreezeFGFonts " + "yes");  // TODO apply profile "FreezeFGFonts" = yes
+                               profile.setFreezeFGFonts(true);
+                                System.out.println(i + " FreezeFGFonts " + "yes");
                             } else {
                                 System.out.println(i + " FreezeFGFonts " + "no");
                             }

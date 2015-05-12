@@ -86,8 +86,8 @@ $(document).ready(function () {
                                     + "<input type='radio' id='FreezeBGColour_" + populationSize + "' class='FreezeBGColour' >Freeze Background<br>"
                                     + "<input type='radio' id='FreezeFGFonts_" + populationSize + "' class='FreezeFGFonts' >Freeze Writing<br>"
                                     + "Score<br><input type='range' id ='score_" + populationSize + "' min='0' max='10' value='5' step='1'  class='score'/><br>"
-                                    + "Text Size<br><input type='range' id ='ChangeFontSize_" + populationSize + "' min='0' max='10' value='5' step='1'  class='ChangeFontSize'/><br>"
-                                    + "Text Contrast<br><input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='10' value='5' step='1'  class='ChangeGFContrast'/><br></div>";
+                                    + "Text Size<br><input type='range' id ='ChangeFontSize_" + populationSize + "' min='0' max='2' value='1' step='1'  class='ChangeFontSize'/><br>"
+                                    + "Text Contrast<br><input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='2' value='1' step='1'  class='ChangeGFContrast'/><br></div>";
                             populationSize += 1;
                         }
                         content += "</div>";
@@ -177,8 +177,8 @@ $(document).ready(function () {
                                     + "<input type='radio' id='FreezeBGColour_" + populationSize + "' class='FreezeBGColour' >Freeze Background<br>"
                                     + "<input type='radio' id='FreezeFGFonts_" + populationSize + "' class='FreezeFGFonts' >Freeze Writing<br>"
                                     + "<input type='range' id ='score_" + populationSize + "' min='0' max='10' value='5' step='1'  class='score'/>Score<br>"
-                                    + "<input type='range' id ='ChangeFontSize_" + populationSize + "' min='0' max='10' value='5' step='1'  class='ChangeFontSize'/>Text Size<br>"
-                                    + "<input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='10' value='5' step='1'  class='ChangeGFContrast'/>Text Contrast<br></div>";
+                                    + "<input type='range' id ='ChangeFontSize_" + populationSize + "' min='0' max='2' value='1' step='1'  class='ChangeFontSize'/>Text Size<br>"
+                                    + "<input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='2' value='1' step='1'  class='ChangeGFContrast'/>Text Contrast<br></div>";
                         populationSize += 1;
                     }
                     content += "</div>";
