@@ -32,18 +32,17 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
      * @return the double
      */
     private double F1(double x) {
+        double F1val;
+    
+        //  fudge the miniumum value to avoid the divide by zero and make sure that the highest mutation rate is 0.5
+        if (x < 2.236)
+            x = 2.236;
+        //now apply a simple inverse square 
+         F1val = 1 / (x*x); 
         
-        double F1val = x*10;
-        //0.106 - 0.0713 * x * x * x + 1.6707 * x * x - 14.6554 * x + 50.6783;
-        if (F1val>100)
-            F1val=100;
-        if (F1val <0)
-            F1val=0;
-        F1val = 0.5 - F1val/200.0;//truncate to range 0-0.5
         
         return (F1val );
-        //return (2 * F1val / 100);
-        // "+ 0.106" : so F1(10) in not negative
+      
     }
 
     /**
@@ -60,7 +59,7 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
         double newval;
      
         String profilename = nextGen.get(which).getName();
-        System.out.println("in evolution.mutateprofile() name of profile nextgen[" +which +"] is " + profilename);
+        //System.out.println("in evolution.mutateprofile() name of profile nextgen[" +which +"] is " + profilename);
         //System.out.println(".......mutation parameter is " +mutation_rate);
         Hashtable kernels = nextGen.get(which).getKernels();
         //System.out.println(".....the number of kernels is " + kernels.size());
@@ -81,23 +80,39 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
             // and then mutate each of the variables within kernel in turn
             while (eVar.hasMoreElements()) 
             {
-                currentVariable = (SolutionAttributes) vars.get(eVar.nextElement().toString());
+                currentvarname = eVar.nextElement().toString();
+                currentVariable = (SolutionAttributes) vars.get(currentvarname);
                  newval = mutateVariable(currentVariable, mutation_rate);
-                currentVariable.setValue(newval);
-                currentvarname = currentVariable.getName();
-                //System.out.println("trying to write back new value for variable " + currentvarname);
-                //nextGen.get(which).setProfileVariableValue( currentvarname, newval);
+                 if (newval != currentVariable.getValue())
+                 {
+                    //  System.out.println("mutating variable " + currentvarname + " in kernel " + kernel.getName());
+                    //  System.out.println("... old value " + currentVariable.getValue() + " is changing  to " + newval);
+ 
+                     // change value in local copy of variable
+                    currentVariable.setValue(newval);
+                    // System.out.println("........have set value in currentVariable ");
+ 
+                    //change value in local copy of hashtable
+                 
+                    vars.put(currentvarname, currentVariable);
+                    
+                    //currentVariable = (SolutionAttributes) vars.get(currentvarname);
+                     //System.out.println("Value in vars is now" + currentVariable.getValue()    );
+                 }
             }    
             // finally mutate the probability that the kernel is active
-            if (Utils.GetRandDouble01() < mutation_rate) {
+            if (Utils.GetRandDouble01() < mutation_rate) 
+                {
                 // mutatedProf.KernelFamily[k].active =
                 // (mutatedProf.KernelFamily[k].active = true)? false:true;
-            }
+                }
             // Aug 2011
-            // need to keep track of number of active kernels
-            // if(mutatedProf.KernelFamily[k].active = true)
-            // numberofactivekernels++;
-            // Aug 2011
+           
+            //finally need to write this new kernel back to the profile in the  nextGen arraylist
+            //delete the old one the add the new one
+            nextGen.get(which).removeKernel(kernel.getName());
+            nextGen.get(which).addKernel(kernel);
+            
         }// end of loop mutating individual kernels
         // need to ensure that enough kernels are still active
 		/*
@@ -115,19 +130,37 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
         // for(int pvar=0;pvar<vars.size();pvar++)
         while (pVar.hasMoreElements()) 
             {
-                currentVariable = (SolutionAttributes) vars.get(pVar.nextElement().toString());
+                currentvarname = pVar.nextElement().toString();
+                currentVariable = (SolutionAttributes) vars.get(currentvarname);
                  newval = mutateVariable(currentVariable, mutation_rate);
-                currentVariable.setValue(newval);
-                currentvarname = currentVariable.getName();
-                System.out.println("trying to write back new value for variable " + currentvarname);
-                nextGen.get(which).setProfileVariableValue( currentvarname, newval);
+                if (newval != currentVariable.getValue())
+                 {
+                      //System.out.println("mutating profile variable " + currentvarname );
+                     //System.out.println("... old value " + currentVariable.getValue() + " is changing  to " + newval);
+                     //set the new value in the local copy of the variable
+                     currentVariable.setValue(newval);
+                     //System.out.println("........have set value in currentVariable ");
+                     //replace it in the local hash table
+                    vars.put(currentvarname, currentVariable);
+                    currentVariable = (SolutionAttributes) vars.get(currentvarname);
+                     //System.out.println("..............Value in vars is now" + currentVariable.getValue()    );
+                     //System.out.println("....now changing the profile in the nextgen arraylist");
+                    //and replace (remove-add) the old variable in the profile in the nextGenarray with the one one
+                    
+                    
+                     nextGen.get(which).removeVariable(currentvarname);
+                     nextGen.get(which).addVariable(currentVariable);
+                     //Hashtable tmpvars = nextGen.get(which).getSolutionAttributes();
+                     //currentVariable = (SolutionAttributes) tmpvars.get(currentvarname);
+                     //System.out.println("..............Value in nextGen is now" + currentVariable.getValue()  );
+                 }
         }
         
         //finally write the mutated profile back to file
         
         //nextGen.get(which).writeProfileToFile(profilename);
-        
-        
+        //nextGen.get(which).printProfile();
+        //System.out.println("finished mutating profle" + which);
         return true;
     }
 
@@ -209,7 +242,12 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
         return newValue;
     }
     
-        @Override
+    /**
+     *
+     * @param which
+     * @return
+     */
+    @Override
     public Profile getNextGenProfileAtIndex(int which)
     {
         if(which <0)
@@ -219,14 +257,20 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
         else
             {
                 //System.out.println("in evolution.getNextGenProfileAtIndex with index: " + which );
-                File thisfile = nextGen.get(which).getFile();
+                //File thisfile = nextGen.get(which).getFile();
                 //System.out.println("... nextgen profile name is: " + nextGen.get(which).getName() + " and filename " + thisfile.getName());
-                return getProfileFromFile(thisfile);
+                //return getProfileFromFile(thisfile);
+                
+                Profile toreturn = nextGen.get(which);
+                return toreturn;
             } 
         
     }
     
-    
+    /**
+     *
+     * @param howMany
+     */
     @Override
     public void generateNextSolutions(int howMany) {
 
@@ -244,61 +288,25 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
             best.remove(Utils.GetRandIntInRange(0, howMany));
         }
    
-        //make at least one copy of all the best and howMany in total
+        //make at least one copy of all the best, and howMany in total
          for ( copied=0;copied < howMany;copied++)
-         {
+           {
             if(copied < best.size())//at least one copy of each
                  toCopy = copied;
              else if(best.size()==1)//if there s only one clone it repeatedly
                 toCopy = 0;
-             else  //oherwise fill up with clones of randomly selected members of best
+             else  //otherwise fill up with clones of randomly selected members of best
                 toCopy = Utils.GetRandIntInRange(0, best.size() - 1);
             //copy all the profiles from the  set of the previous best
              File thisfile = best.get(toCopy).getFile();
              Profile toAdd = getProfileFromFile(thisfile);
              nextGen.add(toAdd);
-             //System.out.println("have made a copy of best[" + copied +"] with filename " + thisfile.getName());
-             
-        }
-        //System.out.println("number copied without change : " + best.size());
-        
-
-       
-        // update profile names by incrementing the generation count in each name and write them to file
-        //first make the folde to hold them
-         File file = new File(Controller.outputFolder.getAbsolutePath() + "/generations/");
-         file.mkdir();
-         for (int i = 0; i < nextGen.size(); i++) 
-          {
-            try {
-                String profileName = nextGen.get(i).getName(); // "gen_x-profile_y.xml"
-               
-                String profile = profileName.substring(profileName.indexOf('-') , profileName.lastIndexOf('_')+1); // profile_.xml
-                int generation = Integer.parseInt(profileName.substring((profileName.indexOf('_') + 1), profileName.indexOf('-')));
-                generation++;
-                String outProfileName = "gen_" + generation + profile + i + ".xml";
-                //System.out.println("outprofilename = " + outProfileName);
-
-                // set name in profile to match new name
-                nextGen.get(i).setName(outProfileName);
-            
-                // write out the profile to file for safe keeping
-                String outProfilePath = Controller.outputFolder.getAbsolutePath() + "/generations/" + outProfileName;
-                nextGen.get(i).writeProfileToFile(outProfilePath);
-                File thisfile = new File(outProfilePath);
-                nextGen.get(i).setFile(thisfile);
-            } catch (StringIndexOutOfBoundsException ex) {
-                System.out.println("The profile names do not follow the correct convention to be processed."
-                        + "/nLook within the Profiles Folder, and ensure the names appear as: gen_0-Profile_x.xml");
-                System.out.println(ex.getMessage());
-            }
-        }
-        
-         //System.out.println("changed names and saved files");
-        
-        // apply mutation where necessary - i.e. not to the duplicates of the best
+             //System.out.println("have made a copy of best[" + copied +"] with filename " + thisfile.getName());           
+          }
+      
+             // apply mutation where necessary - i.e. leaving one dulicate of each of the best
         for(int toMutate = best.size(); toMutate < howMany;toMutate++)
-        {
+          {
             //decide on a mutation rate parameter  according to how the user rated it.  We can use fixed rates to test the operation of the EA
             //double rateToApply = 0.5; 
             // double rateToApply = 1.0; 
@@ -308,23 +316,71 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
                //       + " and mutation parameter is " + rateToApply);
             //now apply mutation with this parameter
             this.mutateProfile(toMutate, rateToApply);
-            System.out.println("..... mutate profile " + toMutate + " complete");
+            //System.out.println("..... mutate profile " + toMutate + " complete");
+          }
+        
+        //make the folder to hold the files in which we will store the next generation
+         File file = new File(Controller.outputFolder.getAbsolutePath() + "/generations/");
+         file.mkdir();
+         
+        // finally update profile names by incrementing the generation count in each name and write them to file for safe keeping
+         for (int i = 0; i < nextGen.size(); i++) 
+          {
+            try {
+                String profileName = nextGen.get(i).getName(); // should be of form "gen_x-profile_y.xml"
+                //get base name for profile
+                String profile = profileName.substring(profileName.indexOf('-') , profileName.lastIndexOf('_')+1); // should be of form "profile_"
+                //get generation and increment it
+                int generation = Integer.parseInt(profileName.substring((profileName.indexOf('_') + 1), profileName.indexOf('-')));
+                generation++;
+                
+                //build string holding new name - note that we hav not kept traack of the profile indices
+                String outProfileName = "gen_" + generation + profile + i + ".xml";
+                //System.out.println("outprofilename = " + outProfileName);
+
+                // set name in profile to match new name
+                nextGen.get(i).setName(outProfileName);
+            
+                // write out the profile to file for safe keeping
+                //build the path by fetching the session details from the controller and adding generaios + this file name
+                String outProfilePath = Controller.outputFolder.getAbsolutePath() + "/generations/" + outProfileName;
+                
+                //write to file
+                nextGen.get(i).writeProfileToFile(outProfilePath);
+                File thisfile = new File(outProfilePath);
+                nextGen.get(i).setFile(thisfile);
+   
+            } catch (StringIndexOutOfBoundsException ex) {
+                System.out.println("The profile names do not follow the correct convention to be processed."
+                        + "/nLook within the Profiles Folder, and ensure the names appear as: gen_0-Profile_x.xml");
+                System.out.println(ex.getMessage());
+            }
         }
         
+         //System.out.println("changed names and saved files");
+        
+    
+        
         //finally write all ofthe profiles to file for safe keeping
-        for(int toSave=0; toSave < howMany;toSave++)
-        {
-            String outProfileName= nextGen.get(toSave).getName();
-            String outProfilePath = Controller.outputFolder.getAbsolutePath() + "/generations/" + outProfileName;
+        //for(int toSave=0; toSave < howMany;toSave++)
+        //{
+          //  String outProfileName= nextGen.get(toSave).getName();
+           // String outProfilePath = Controller.outputFolder.getAbsolutePath() + "/generations/" + outProfileName;
             //System.out.println("saving next gen profile to file: " + outProfileName);
-            nextGen.get(toSave).writeProfileToFile(outProfilePath);
+           // nextGen.get(toSave).writeProfileToFile(outProfilePath);
             
-        }
+        //}
         
  
     }
-//TODO  why do we have  this function with the same name in two different classes?
-    public Profile getProfileFromFile(File file) {
+// TODO read in the global scores from the profile.xml files
+
+    /**
+     *
+     * @param file
+     * @return
+     */
+        public Profile getProfileFromFile(File file) {
         Profile profile = new Profile(file);
         try {
             Document XmlDoc = new SAXBuilder().build(file);
@@ -408,6 +464,8 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
                     }
                     Kernel kernel = new Kernel(kernelName, vars);
                     profile.addKernel(kernel);
+                } else if (hint.getName().equalsIgnoreCase("interaction")) {
+                // TODO 
                 }
             }
         } catch (Exception pce) {
@@ -416,7 +474,10 @@ private ArrayList<Profile> nextGen = new ArrayList<>(); //holds copies of all th
         return profile;
     }
 
-
+    /**
+     *
+     * @param evaluatedSolutions
+     */
     @Override
     public void updateWorkingMemory(Profile[] evaluatedSolutions) {
         int popmember = 0; //loop variable
