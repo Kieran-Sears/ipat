@@ -95,6 +95,15 @@ public class SolutionAttributes {
 	public double getRateOfEvolution() {
 		return rateOfEvolution;
 	}
+        
+        /**
+	 * Gets the rateOfEvolution.
+	 *
+	 * @param the new rateOfEvolution
+	 */
+	public void setRateOfEvolution(double newval) {
+		 this.rateOfEvolution = newval;
+	}
 
 	/**
 	 * Gets the granularity.

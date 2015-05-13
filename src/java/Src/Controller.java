@@ -11,6 +11,7 @@ package Src;
  */
 import Algorithms.CSSProcessor;
 import Algorithms.ESEvolution;
+import Algorithms.HintsProcessor;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -113,7 +114,15 @@ public class Controller {
      *
      */
         public void mainloop(){
-        
+            
+            HintsProcessor myHintsProcessor = new HintsProcessor();
+        //deal with the hints the user provided
+            //TODO test this before  and after
+        for(int i=0;i < noOfProfiles;i++)
+            {
+            currentGenerationOfProfiles[i] = myHintsProcessor.InterpretHintInProfile(currentGenerationOfProfiles[i]);
+            }
+        //tell the metaheuristic to update its working memory
         evolution.updateWorkingMemory(currentGenerationOfProfiles);
         //now you are ready to create the next generation - which since they all were sorted the same should contain all the initial provided profiles
         evolution.generateNextSolutions(noOfProfiles);
