@@ -100,7 +100,7 @@ public class HintsProcessor {
       
     //next piece of code deals with the text size slider - 5 is the default value
     // this version is deterministic because we dnt yet have a bias value in a soltion attribute as well as a rate of evolution
-    if(thisProfile.getChangeFontSize() !=5)
+    if(thisProfile.getChangeFontSize() !=1)
       {
         //state which variables are affected - just th font size in this case
         variablesAffected.clear();
@@ -127,8 +127,20 @@ public class HintsProcessor {
                        //get the old value
                        double value = currentVariable.getValue();
                         //change it according to the hint 
-                       //THIS IS THE DETERMIISTIC BIT change by +/- 20% for each move away from 5
-                        value = value + value*0.2*(thisProfile.getChangeFontSize() -5); 
+                       //THIS IS THE DETERMIISTIC BIT 
+                         try
+                           {
+                             if( thisProfile.getChangeFontSize()==0)///"smaller"
+                                value = value*0.5;
+                            else if ( thisProfile.getChangeFontSize()==0)///"bigger"
+                                value = value*2.0;
+                            else //anything else
+                                throw new UnsupportedOperationException("thisProfile.getChangeFontSize() returned a value that is not 0 1 or 2");
+                           } catch (Exception e)
+                           {
+                              e.printStackTrace();
+                           }
+                       
                         //write this new value into the current variable
                           currentVariable.setValue(value);
                         //put this back into the hash table of vars for the kernel  
