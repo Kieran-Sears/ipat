@@ -100,7 +100,7 @@ public class HintsProcessor {
       
     //next piece of code deals with the text size slider - 5 is the default value
     // this version is deterministic because we dnt yet have a bias value in a soltion attribute as well as a rate of evolution
-    if(thisProfile.getChangeFontSize() !=1)
+    if(thisProfile.getChangeFontSize() !=5)
       {
         //state which variables are affected - just th font size in this case
         variablesAffected.clear();
@@ -131,11 +131,11 @@ public class HintsProcessor {
                          try
                            {
                              if( thisProfile.getChangeFontSize()==0)///"smaller"
-                                value = value*0.5;
-                            else if ( thisProfile.getChangeFontSize()==0)///"bigger"
-                                value = value*2.0;
+                                value = value*0.2;
+                            else if ( thisProfile.getChangeFontSize() <=10)///"bigger"
+                                value = value* ( 0.1 * 0.2* thisProfile.getChangeFontSize()) ;
                             else //anything else
-                                throw new UnsupportedOperationException("thisProfile.getChangeFontSize() returned a value that is not 0 1 or 2");
+                                throw new UnsupportedOperationException("thisProfile.getChangeFontSize() returned a value out of the range 0-10");
                            } catch (Exception e)
                            {
                               e.printStackTrace();
