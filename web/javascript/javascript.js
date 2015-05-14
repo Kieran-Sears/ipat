@@ -83,11 +83,11 @@ $(document).ready(function () {
                             content += "<div class='cell'>"
                                     + "<div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div>"
                                     + "<iframe src='" + imageArray[j] + "' scrolling='no' class='cellFrames' id='frame_" + populationSize + "' ></iframe>"
-                                    + "<input type='radio' id='FreezeBGColour_" + populationSize + "' class='FreezeBGColour' >Freeze Background<br>"
-                                    + "<input type='radio' id='FreezeFGFonts_" + populationSize + "' class='FreezeFGFonts' >Freeze Writing<br>"
-                                    + "Score<br><input type='range' id ='score_" + populationSize + "' min='0' max='10' value='5' step='1'  class='score'/><br>"
-                                    + "Text Size<br><input type='range' id ='ChangeFontSize_" + populationSize + "' min='0' max='2' value='1' step='1'  class='ChangeFontSize'/><br>"
-                                    + "Text Contrast<br><input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='2' value='1' step='1'  class='ChangeGFContrast'/><br></div>";
+                                    + "<div class='hint'><input type='checkbox' id='FreezeBGColour_" + populationSize + "' class='FreezeBGColour' ><label for='FreezeBGColour_" + populationSize + "' class='label'>Freeze Background</label></div>"
+                                    + "<div class='hint'><input type='checkbox' id='FreezeFGFonts_" + populationSize + "' class='FreezeFGFonts' ><label for='FreezeFGFonts_" + populationSize + "' class='label'>Freeze Fonts</label></div>"
+                                    + "<div class='hint'><input type='range' id ='score_" + populationSize + "' min='0' max='10' value='5' step='1'/><label for='score_" + populationSize + "' class='label'>Score</label></div>"
+                                    + "<div class='hint'><input type='range' id ='ChangeFontSize_" + populationSize + "' min='0' max='2' value='1' step='1' /><label for='ChangeFontSize_" + populationSize + "' class='label'>Change Font</label></div>"
+                                    + "<div class='hint'><input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='2' value='1' step='1'  /><label for='ChangeGFContrast_" + populationSize + "' class='label'>Change Contrast</label></div>";
                             populationSize += 1;
                         }
                         content += "</div>";
@@ -111,8 +111,8 @@ $(document).ready(function () {
     // next Generation button pressed
 
     nextGen.addEventListener('click', function () {
-         
-        
+
+
         var data = {};
         var source = [];
         var score = [];
@@ -120,22 +120,22 @@ $(document).ready(function () {
         var FreezeFGFonts = [];
         var ChangeFontSize = [];
         var ChangeGFContrast = [];
-        
+
         for (var i = 0; i < populationSize; i++) {
-             source.push(document.getElementById("frame_" + i).src);
-             score.push( document.getElementById("score_" + i).value);
-              FreezeBGColour.push( document.getElementById("FreezeBGColour_" + i).value);
-              FreezeFGFonts.push( document.getElementById("FreezeFGFonts_" + i).value);
-              ChangeFontSize.push( document.getElementById("ChangeFontSize_" + i).value);
-              ChangeGFContrast.push( document.getElementById("ChangeGFContrast_" + i).value);
+            source.push(document.getElementById("frame_" + i).src);
+            score.push(document.getElementById("score_" + i).value);
+            ChangeFontSize.push(document.getElementById("ChangeFontSize_" + i).value);
+            ChangeGFContrast.push(document.getElementById("ChangeGFContrast_" + i).value);
+            FreezeBGColour.push($('#FreezeBGColour_' + i).is(':checked'));
+            FreezeFGFonts.push($('#FreezeFGFonts_' + i).is(':checked'));
         }
 
         data['source'] = source;
-        data['score'] =  score;
+        data['score'] = score;
         data['FreezeBGColour'] = FreezeBGColour;
-        data['FreezeFGFonts'] =   FreezeFGFonts;
-        data['ChangeFontSize'] =  ChangeFontSize;
-        data['ChangeGFContrast'] =  ChangeGFContrast;
+        data['FreezeFGFonts'] = FreezeFGFonts;
+        data['ChangeFontSize'] = ChangeFontSize;
+        data['ChangeGFContrast'] = ChangeGFContrast;
 
         $('#tabs-byProfile').empty();
         $('#tabs-byProfile').html("<img src='" + image + "' />");
@@ -143,7 +143,7 @@ $(document).ready(function () {
         $.ajax({
             url: "newGen",
             type: "POST",
-            data: {data : JSON.stringify(data)},
+            data: {data: JSON.stringify(data)},
             success: function (result) {
 
                 $('#loading').html("<img src='" + image + "' />");
@@ -169,16 +169,16 @@ $(document).ready(function () {
                     var res = result[cnt];
                     var imageArray = res.toString().split(",");
                     content += "<div id='byProfile_" + i + "' class='tab-content'>";
-                    // commented sections here allow the table cells to create new rows every 3 columns
+
                     for (var j = 0; j < imageArray.length; j++) {
                         content += "<div class='cell'>"
-                                    + "<div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div>"
-                                    + "<iframe src='" + imageArray[j] + "' scrolling='no' class='cellFrames' id='frame_" + populationSize + "' ></iframe>"
-                                    + "<input type='radio' id='FreezeBGColour_" + populationSize + "' class='FreezeBGColour' >Freeze Background<br>"
-                                    + "<input type='radio' id='FreezeFGFonts_" + populationSize + "' class='FreezeFGFonts' >Freeze Writing<br>"
-                                    + "<input type='range' id ='score_" + populationSize + "' min='0' max='10' value='5' step='1'  class='score'/>Score<br>"
-                                    + "<input type='range' id ='ChangeFontSize_" + populationSize + "' min='0' max='2' value='1' step='1'  class='ChangeFontSize'/>Text Size<br>"
-                                    + "<input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='2' value='1' step='1'  class='ChangeGFContrast'/>Text Contrast<br></div>";
+                                + "<div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div>"
+                                + "<iframe src='" + imageArray[j] + "' scrolling='no' class='cellFrames' id='frame_" + populationSize + "' ></iframe>"
+                                + "<div class='hint'><input type='checkbox' id='FreezeBGColour_" + populationSize + "' class='FreezeBGColour' ><label for='FreezeBGColour_" + populationSize + "' class='label'>Freeze Background</label></div>"
+                                + "<div class='hint'><input type='checkbox' id='FreezeFGFonts_" + populationSize + "' class='FreezeFGFonts' ><label for='FreezeFGFonts_" + populationSize + "' class='label'>Freeze Fonts</label></div>"
+                                + "<div class='hint'><input type='range' id ='score_" + populationSize + "' min='0' max='10' value='5' step='1'/><label for='score_" + populationSize + "' class='label'>Score</label></div>"
+                                + "<div class='hint'><input type='range' id ='ChangeFontSize_" + populationSize + "' min='0' max='2' value='1' step='1' /><label for='ChangeFontSize_" + populationSize + "' class='label'>Change Font</label></div>"
+                                + "<div class='hint'><input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='2' value='1' step='1'  /><label for='ChangeGFContrast_" + populationSize + "' class='label'>Change Contrast</label></div>";
                         populationSize += 1;
                     }
                     content += "</div>";
@@ -190,10 +190,37 @@ $(document).ready(function () {
                     $('#tabs-byProfile').append(content);
                 }, 3000);
 
-            }
 
+                // create the "byImages" tab view
+                populationSize = 0;
+                // get size of a profile array of results
+                var res = result["0"];
+                var imageArray = res.toString().split(",");
+                
+                 // [layer one] create the list for the profile tabs 
+                var content = "<div id='tabs-container'><ul class='tabs-menu'>";
+                for (var i = 0; i < imageArray.length; i++) {
+                    // get the name of the image for the tab heading
+                    var sourcePath = imageArray[i];
+                    var n = sourcePath.lastIndexOf("-");
+                    var imageName = sourcePath.substring(n);
+                    content += "<li  id='li_" + i + "_2' onclick='tabClicked(this.id)'><a href='#byImage_" + i + "'>" + imageName + "</a></li>";
+                }
+                // [layer two] create div which will contain all the seporate tabs and their content this is needed for the CSS 
+                content += " </ul> <div class='tabstuff'>";
+                
+                for (var j = 0; j < imageArray.length; j ++) {
+                  content += "<div id='byImage_" + i + "' class='tab-content'>";
+                 for (var j = 0; j < size; j++) { 
+                 
+                 
+                 
+                    }
+                }
+                
+            }
         }, false);
-         populationSize = 0;
+        populationSize = 0;
         genCount.value = parseInt(genCount.value) + 1;
     });
 
@@ -222,6 +249,7 @@ $(document).ready(function () {
     }, false);
 
 //================================================
+// end of "on window load"
 });
 
 //================================================
@@ -232,9 +260,11 @@ function frameClick(id) {
     document.getElementById("previewFrame").src = src;
 }
 //================================================
-
+// changing the profile tab being displayed
 function tabClicked(item) {
     $('[id^="byProfile_"]').hide();
     var num = item.slice(3);
     $('#byProfile_' + num).show();
 }
+//================================================
+

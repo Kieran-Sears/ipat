@@ -174,6 +174,7 @@ public class Dispatcher extends HttpServlet {
         HashMap<String, ArrayList<String>> HM = new HashMap();
 
 
+        // send results in format : HashMap <profile number,  ArrayList of sources (Strings) for that profile >
         for (Artifact result : results) {
             // cut out the generation (gen_y)
             String name = result.getFilename().substring(result.getFilename().indexOf("-") + 1);
@@ -208,17 +209,6 @@ public class Dispatcher extends HttpServlet {
             }
         }
 
-//        // check for correct output for the view
-//        Iterator<ArrayList<String>> iterator = HM.values().iterator();
-//        int tempCount = 0;
-//        while (iterator.hasNext()) {
-//            ArrayList<String> next = iterator.next();
-//            System.out.println("profile " + tempCount);
-//            tempCount++;
-//            for (String next1 : next) {
-//                System.out.println(next1);
-//            }
-//        }
         
         System.out.println("Initialisation of profiles for session (" + session.getId() + ") is complete\n"
                 + "Awaiting user to update parameters to generate next generation of results.\n");
