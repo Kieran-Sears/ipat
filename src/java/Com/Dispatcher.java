@@ -20,6 +20,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import Src.Controller;
+import Src.Hints;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -171,49 +172,21 @@ public class Dispatcher extends HttpServlet {
         controller.initialArtifacts();
         Artifact[] results = controller.processedArtifacts;
         session.setAttribute("Controller", controller);
-        HashMap<String, ArrayList<String>> HM = new HashMap();
 
+        Hints hints = new Hints(getServletContext().getInitParameter("hintsXML"));
+  
+        session.setAttribute("hints", hints);
+        HashMap HM = hints.getResultsHashMap(session.getId(), results);
+        String byProfileHTML = hints.getByProfileHTML(HM, hints.getVariables());
+        String byImageHTML = hints.getByImageHTML(HM, hints.getVariables());
+        HashMap display = new HashMap();
+        display.put("byProfileHTML", byProfileHTML);
+        display.put("byImageHTML", byImageHTML);
 
-        // send results in format : HashMap <profile number,  ArrayList of sources (Strings) for that profile >
-        for (Artifact result : results) {
-            // cut out the generation (gen_y)
-            String name = result.getFilename().substring(result.getFilename().indexOf("-") + 1);
-            // split the result into its profile_x  and  fileName
-            String[] parts = name.split("-");
-            String fileName = parts[1];
-            String profileNum = parts[0].substring(parts[0].indexOf("_") + 1);
-
-            // if the hashmap is empty add the first element to it
-            if (HM.isEmpty()) {
-                System.out.println("CREATING RESULT [" + fileName + "] TO [ " + profileNum + " ] ");
-                ArrayList<String> imageList = new ArrayList<>();
-                imageList.add("Client%20Data/" + session.getId() + "/output/" + result.getFile().getName());
-                HM.put(profileNum, imageList);
-
-                // if the hashmap is not empty 
-            } else {
-                // check if hashmap already has the profile with a result in it and add the current result to this list
-                if (HM.containsKey(profileNum)) {
-                    System.out.println("ADDING RESULT [" + fileName + "] TO [ " + profileNum + " ] ");
-                    ArrayList<String> imageList = (ArrayList<String>) HM.get(profileNum);
-                    imageList.add("Client%20Data/" + session.getId() + "/output/" + result.getFile().getName());
-                    HM.put(profileNum, imageList);
-
-                    // if there are no matches, add a new hashmap element with the current result placed into a new list 
-                } else {
-                    System.out.println("CREATING RESULT [" + fileName + "] TO [ " + profileNum + " ] ");
-                    ArrayList<String> imageList = new ArrayList<>();
-                    imageList.add("Client%20Data/" + session.getId() + "/output/" + result.getFile().getName());
-                    HM.put(profileNum, imageList);
-                }
-            }
-        }
-
-        
         System.out.println("Initialisation of profiles for session (" + session.getId() + ") is complete\n"
                 + "Awaiting user to update parameters to generate next generation of results.\n");
 
-        String json = new Gson().toJson(HM);
+        String json = new Gson().toJson(display);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);

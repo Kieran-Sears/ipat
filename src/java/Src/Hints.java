@@ -23,6 +23,16 @@ import org.w3c.dom.NodeList;
  */
 public class Hints {
 
+    private HashMap variables;
+
+    public Hints(String hintsXML) {
+        this.variables = this.setHintsVariables(hintsXML);
+    }
+    
+    
+    
+    
+    
     /**
      *
      * @param data
@@ -164,23 +174,9 @@ public class Hints {
      * @return HashMap containing the hints as keys and ArrayLists containing as
      * values
      */
-    public HashMap getHintsVariables(String hintsXML) {
+    private HashMap setHintsVariables(String hintsXML) {
         HashMap<String, String> variables = new HashMap();
 
-//        <interaction>
-//	<ChangeGFContrast>
-//		<type>range</type>
-//		<defaultValue>Cruise</defaultValue>
-//	</ChangeGFContrast>
-//	<ChangeFontSize>
-//		<type>range</type>
-//		<defaultValue>Enderson</defaultValue>
-//	</ChangeFontSize>
-//	<FreezeBGColour>
-//		<type>checkbox</type>
-//		<defaultValue>Bush</defaultValue>
-//	</FreezeBGColour>
-//</interaction>
         try {
             File file = new File(hintsXML);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -215,7 +211,7 @@ public class Hints {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return variables;
+       return variables;
     }
 
     /**
@@ -268,27 +264,36 @@ public class Hints {
 
         // get size of a profile array of results
         Collection values = processedArtifacts.values();
-        ArrayList<String> next = (ArrayList<String>) values.iterator().next();
-        var imageArray = res.toString().split(",");
+        ArrayList<String> imageArray = (ArrayList<String>) values.iterator().next();
 
         // [layer one] create the list for the profile tabs 
-        var content = "<div id='tabs-container'><ul class='tabs-menu'>";
-        for (var i = 0; i < imageArray.length; i++) {
+       String cells = "<div id='tabs-container'><ul class='tabs-menu'>";
+        for (int i = 0; i < imageArray.size(); i++) {
             // get the name of the image for the tab heading
-            var sourcePath = imageArray[i];
-            var n = sourcePath.lastIndexOf("-");
-            var imageName = sourcePath.substring(n);
-            content += "<li  id='li_" + i + "_2' onclick='tabClicked(this.id)'><a href='#byImage_" + i + "'>" + imageName + "</a></li>";
+           String sourcePath = imageArray.get(i);
+            int n = sourcePath.lastIndexOf("-");
+           String imageName = sourcePath.substring(n);
+            cells += "<li  id='li_" + i + "_2' onclick='tabClicked(this.id)'><a href='#byImage_" + i + "'>" + imageName + "</a></li>";
         }
-        // [layer two] create div which will contain all the seporate tabs and their content this is needed for the CSS 
-        content += " </ul> <div class='tabstuff'>";
+        // [layer two] create div which will contain all the seporate tabs and their cells this is needed for the CSS 
+        cells += " </ul> <div class='tabstuff'>";
 
-        for (var j = 0; j < imageArray.length; j++) {
-            content += "<div id='byImage_" + i + "' class='tab-content'>";
-            for (var j = 0; j < size; j++) {
-
+        for (int j = 0; j < imageArray.size(); j++) {
+            cells += "<div id='byImage_" + j + "' class='tab-content'>";
+            for (int i = 0; i < values.size(); i++) {
+              cells += "<div class='cell'>"
+                        + "<div id='overlay_" + populationSize + "' class='overlay' onclick='frameClick(this.id)'></div>"
+                        + "<iframe src='" + imageArray.get(j) + "' scrolling='no' class='cellFrames' id='frame_" + populationSize + "' ></iframe>"
+                        + "<div class='hint'><input type='checkbox' id='FreezeBGColour_" + populationSize + "' class='FreezeBGColour' ><label for='FreezeBGColour_" + populationSize + "' class='label'>Freeze Background</label></div>"
+                        + "<div class='hint'><input type='checkbox' id='FreezeFGFonts_" + populationSize + "' class='FreezeFGFonts' ><label for='FreezeFGFonts_" + populationSize + "' class='label'>Freeze Fonts</label></div>"
+                        + "<div class='hint'><input type='range' id ='score_" + populationSize + "' min='0' max='10' value='5' step='1'/><label for='score_" + populationSize + "' class='label'>Score</label></div>"
+                        + "<div class='hint'><input type='range' id ='ChangeFontSize_" + populationSize + "' min='0' max='2' value='1' step='1' /><label for='ChangeFontSize_" + populationSize + "' class='label'>Change Font</label></div>"
+                        + "<div class='hint'><input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='2' value='1' step='1'  /><label for='ChangeGFContrast_" + populationSize + "' class='label'>Change Contrast</label></div>";
+                populationSize += 1;
             }
+            cells += "</div>";
         }
+        cells += "</div></div>";
         return cells;
     }
 
@@ -334,7 +339,12 @@ public class Hints {
                 }
             }
         }
+        
         return HM;
+    }
+
+    public HashMap getVariables() {
+        return variables;
     }
 
 }

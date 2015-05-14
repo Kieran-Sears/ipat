@@ -85,21 +85,19 @@ public class newGenRequest extends HttpServlet {
             Gson gson = new Gson();
             HashMap data = gson.fromJson(request.getParameter("data"), HashMap.class);
             Controller controller = (Controller) session.getAttribute("Controller");
-           Hints interaction = new Hints();
-           interaction.updateProfileHints(data, controller);
-           // generate the next generation of result artifacts
+            Hints hints = (Hints) session.getAttribute("hints");
+            // update current generation profile scores
+            hints.updateProfileHints(data, controller);
+            // generate the next generation of result artifacts
             controller.mainloop();
             // write the artifacts to a structure for the view to read off and display results from
             Artifact[] results = controller.processedArtifacts;
-            
-            Hints hints = new Hints();
-            // TODO servlet context param ( location of hints.xml )
-            HashMap hintsVariables = hints.getHintsVariables(null);
             HashMap HM = hints.getResultsHashMap(session.getId(), results);
-            String byProfileHTML = hints.getByProfileHTML(HM, hintsVariables);
+            String byProfileHTML = hints.getByProfileHTML(HM, hints.getVariables());
+             String byImageHTML = hints.getByImageHTML(HM, hints.getVariables());
             HashMap display = new HashMap();
             display.put("byProfileHTML", byProfileHTML);
-            
+            display.put("byImageHTML", byImageHTML);
             // send the data structure containing the new generation of result artafacts to the view
             String json = new Gson().toJson(display);
             response.setContentType("application/json");
