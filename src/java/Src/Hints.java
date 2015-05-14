@@ -252,9 +252,9 @@ public class Hints {
                         + "<div class='hint'><input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='2' value='1' step='1'  /><label for='ChangeGFContrast_" + populationSize + "' class='label'>Change Contrast</label></div>";
                 populationSize += 1;
             }
-            cells += "</div>";
+            cells += "</div></div>";
         }
-        cells += "</div></div>";
+        cells += "</div>";
         return cells;
     }
 

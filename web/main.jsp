@@ -74,17 +74,17 @@
 
                 <div id="tabs">
                     <ul class="tabs-menu">
-                        <li class="current"><a href="#tabs-byProfile">View By Profiles</a></li>
-                        <li><a href="#tabs-byImage">View By Images</a></li>
+                        <li><a href='#tabs-byProfile' onclick='tabClicked(this.id)'>View By Profiles</a></li>
+                        <li><a href='#tabs-byImage' onclick='tabClicked(this.id)'>View By Images</a></li>
                     </ul>
-                    <div class="tab">
-                        <div id="tabs-byProfile" class="tab-content">        
 
-                        </div>
-                        <div id="tabs-byImage" class="tab-content">
+                    <div id="tabs-byProfile" class="tab-content">        
 
-                        </div>
                     </div>
+                    <div id="tabs-byImage" class="tab-content">
+
+                    </div>
+
                 </div>
                 <!--end of iframe table-->
                 <!--start of button table-->
