@@ -119,7 +119,7 @@ and open the template in the editor.
 
 .tab-content {
     padding: 10px;
-    position: absolute;
+    position: relative;
 }
 
 body {

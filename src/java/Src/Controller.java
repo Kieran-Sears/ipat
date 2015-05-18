@@ -15,10 +15,6 @@ import Algorithms.HintsProcessor;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Vector;
 
 /**

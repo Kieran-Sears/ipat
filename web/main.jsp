@@ -23,7 +23,7 @@
     <script src="javascript/javascript.js"></script>
     <script>$(function () {$("#tabs").tabs();});</script>
   <link rel="stylesheet" type="text/css" href="css/StyleSheet.css"> 
-   <link rel="stylesheet" type="text/css" href="css/tabStyle.css"> 
+
 </head>
 <body>
     <!--boarder of program-->

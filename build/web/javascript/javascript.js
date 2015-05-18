@@ -87,10 +87,11 @@ $(document).ready(function () {
                                     + "<div class='hint'><input type='checkbox' id='FreezeFGFonts_" + populationSize + "' class='FreezeFGFonts' ><label for='FreezeFGFonts_" + populationSize + "' class='label'>Freeze Fonts</label></div>"
                                     + "<div class='hint'><input type='range' id ='score_" + populationSize + "' min='0' max='10' value='5' step='1'/><label for='score_" + populationSize + "' class='label'>Score</label></div>"
                                     + "<div class='hint'><input type='range' id ='ChangeFontSize_" + populationSize + "' min='0' max='2' value='1' step='1' /><label for='ChangeFontSize_" + populationSize + "' class='label'>Change Font</label></div>"
-                                    + "<div class='hint'><input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='2' value='1' step='1'  /><label for='ChangeGFContrast_" + populationSize + "' class='label'>Change Contrast</label></div>";
+                                    + "<div class='hint'><input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='2' value='1' step='1'  /><label for='ChangeGFContrast_" + populationSize + "' class='label'>Change Contrast</label></div>"
+                                       + "</div>";
                             populationSize += 1;
                         }
-                        content += "</div></div>";
+                        content += "</div>";
                     }
                     content += "</div>";
                     // populate the byProfiles tab 
@@ -178,10 +179,11 @@ $(document).ready(function () {
                                 + "<div class='hint'><input type='checkbox' id='FreezeFGFonts_" + populationSize + "' class='FreezeFGFonts' ><label for='FreezeFGFonts_" + populationSize + "' class='label'>Freeze Fonts</label></div>"
                                 + "<div class='hint'><input type='range' id ='score_" + populationSize + "' min='0' max='10' value='5' step='1'/><label for='score_" + populationSize + "' class='label'>Score</label></div>"
                                 + "<div class='hint'><input type='range' id ='ChangeFontSize_" + populationSize + "' min='0' max='2' value='1' step='1' /><label for='ChangeFontSize_" + populationSize + "' class='label'>Change Font</label></div>"
-                                + "<div class='hint'><input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='2' value='1' step='1'  /><label for='ChangeGFContrast_" + populationSize + "' class='label'>Change Contrast</label></div>";
+                                + "<div class='hint'><input type='range' id ='ChangeGFContrast_" + populationSize + "' min='0' max='2' value='1' step='1'  /><label for='ChangeGFContrast_" + populationSize + "' class='label'>Change Contrast</label></div>"
+                                + "</div>";
                         populationSize += 1;
                     }
-                    content += "</div></div>";
+                    content += "</div>";
                 }
                 content += "</div>";
                 // populate the byProfiles tab 

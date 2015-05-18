@@ -15,7 +15,7 @@ import java.util.Iterator;
 public class HintsProcessor {
 
     /**
-     * method that interprets the hints provided by the user and makes appropriate application-specific changes ot the profile variables
+     * method that interprets the hints provided by the user and makes appropriate application-specific changes to the profile variables
      * @param thisProfile
      * @return changed profile
      */
@@ -28,7 +28,7 @@ public class HintsProcessor {
     String currentVarName;
     
     //for now I'll use an arraylist holding the names of all of the hints
-    //mainly so i cna code in the logic of checking the name before deidnign what to do
+    //mainly so i can code in the logic of checking the name before deciding what to do
     ArrayList hintList = new ArrayList();
     hintList.add("freezeBGColour");
     hintList.add("freezeFGFonts");
@@ -207,7 +207,7 @@ public class HintsProcessor {
                             else if ( thisProfile.getChangeGFContrast()==2)///"more"
                                 value = 1;
                             else //anything else
-                                throw new UnsupportedOperationException("thisProfile.getChangeFontSize() returned a value that is not 0 1 or 2");
+                                throw new UnsupportedOperationException("thisProfile.getChangeFGContrast() returned a value that is not 0 1 or 2"); // could be wrong exception
                            } catch (Exception e)
                            {
                               //e.printStackTrace();
