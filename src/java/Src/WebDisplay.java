@@ -11,27 +11,18 @@ import java.util.HashMap;
  *
  * @author kieran
  */
-public abstract class Display {
-
-     private HashMap byProfileStruct;
-    private HashMap byImageStruct;
-    
+public class WebDisplay extends Display {
+        
     
     public HashMap constructByProfileStruct(){
+    
         return null;
     }
     
     public HashMap constructByImageStruct(){
+    
         return null;
     }
-
-    public HashMap getByProfileStruct() {
-        return byProfileStruct;
-    }
-
-    public HashMap getByImageStruct() {
-        return byImageStruct;
-    }
     
-
+    
 }

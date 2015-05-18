@@ -155,28 +155,8 @@ public class Dispatcher extends HttpServlet {
         File profile = new File(getServletContext().getInitParameter("profileFolder"));
 
         System.out.println("folders created");
-        // TODO synchronize controller
         Controller controller = new Controller(input, output, profile);
-        //commented out code below looks older than what Kieran sent me on 14/5
-//        controller.initialArtifacts();
-//        session.setAttribute("Controller", controller);
-//        Artifact[] results = controller.processedArtifacts;
-//
-//        
-//        System.out.println("Initialisation of profiles for session (" + session.getId() + ") is complete\n"
-//                + "Awaiting user to update parameters to generate next generation of results.\n");
-//
-//        List<String> list = new ArrayList<String>();
-//        for (Artifact result : results) {
-//            //paths returned to view as "src" attributes for iframe table
-//            //example :  Client%20Data/6328C0BCAA80D3244E0A66F77BBD47D1/output/gen_1-profile_1-HTMLPage2.html
-//            list.add("Client%20Data/" + session.getId() + "/output/" + result.getFilename()); 
-//        }
-//        String json = new Gson().toJson(list);
-//
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding("UTF-8");
-//        response.getWriter().write(json);
+
 
         
         //strt of code kieran sent me
@@ -220,17 +200,6 @@ public class Dispatcher extends HttpServlet {
            }
        }
 
-//        // check for correct output for the view
-//        Iterator<ArrayList<String>> iterator = HM.values().iterator();
-//        int tempCount = 0;
-//        while (iterator.hasNext()) {
-//            ArrayList<String> next = iterator.next();
-//            System.out.println("profile " + tempCount);
-//            tempCount++;
-//            for (String next1 : next) {
-//                System.out.println(next1);
-//            }
-//        }
 
        System.out.println("Initialisation of profiles for session (" + session.getId() + ") is complete\n"
                + "Awaiting user to update parameters to generate next generation of results.\n");
