@@ -44,22 +44,22 @@ public class Interaction {
             // initiate Arrays with different data types for values
             HashMap<String, ArrayList> profileValues = new HashMap();
             ArrayList<Boolean> booleanArray = new ArrayList<>();
-            ArrayList<Integer> integerArray = new ArrayList<>();
+            ArrayList<Double> doubleArray = new ArrayList<>();
 
             // globalScoreValueArray (int)
-            integerArray = new ArrayList<>();
-            integerArray.add(Integer.parseInt(score.get(i)));
-            profileValues.put("globalScore", integerArray);
+            doubleArray = new ArrayList<>();
+            doubleArray.add(Double.valueOf(score.get(i)));
+            profileValues.put("globalScore", doubleArray);
 
             // ChangeGFContrastValueArray (int)
-            integerArray = new ArrayList<>();
-            integerArray.add(Integer.parseInt(ChangeGFContrast.get(i)));
-            profileValues.put("ChangeGFContrast", integerArray);
+            doubleArray = new ArrayList<>();
+            doubleArray.add(Double.valueOf(ChangeGFContrast.get(i)));
+            profileValues.put("ChangeGFContrast", doubleArray);
 
             // ChangeFontSizeValueArray (int)
-            integerArray = new ArrayList<>();
-            integerArray.add(Integer.parseInt(ChangeFontSize.get(i)));
-            profileValues.put("ChangeFontSize", integerArray);
+            doubleArray = new ArrayList<>();
+            doubleArray.add(Double.valueOf(ChangeFontSize.get(i)));
+            profileValues.put("ChangeFontSize", doubleArray);
 
             // FreezeBGColourValueArray (String)
             booleanArray = new ArrayList<>();
@@ -94,8 +94,8 @@ public class Interaction {
                 String key = (String) keyObj;
                 switch (key) {
                     case "globalScore":
-                        ArrayList<Integer> globalScores = (ArrayList<Integer>) get.get(key);
-                        for (Integer globalScore : globalScores) {
+                        ArrayList<Double> globalScores = (ArrayList<Double>) get.get(key);
+                        for (Double globalScore : globalScores) {
                             sum += globalScore;
                             int average = sum / globalScores.size();
                             profile.setGlobalScore(average);
@@ -103,8 +103,8 @@ public class Interaction {
                         }
                         break;
                     case "ChangeGFContrast":
-                        ArrayList<Integer> GFContrasts = (ArrayList<Integer>) get.get(key);
-                        for (Integer GFContrast : GFContrasts) {
+                        ArrayList<Double> GFContrasts = (ArrayList<Double>) get.get(key);
+                        for (Double GFContrast : GFContrasts) {
                             sum += GFContrast;
                             int average = sum / GFContrasts.size();
                             profile.setChangeGFContrast(average);
@@ -112,8 +112,8 @@ public class Interaction {
                         }
                         break;
                     case "ChangeFontSize":
-                        ArrayList<Integer> fontSizes = (ArrayList<Integer>) get.get(key);
-                        for (Integer frontSize : fontSizes) {
+                        ArrayList<Double> fontSizes = (ArrayList<Double>) get.get(key);
+                        for (Double frontSize : fontSizes) {
                             sum += frontSize;
                             int average = sum / fontSizes.size();
                             profile.setChangeFontSize(average);

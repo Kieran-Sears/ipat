@@ -118,8 +118,9 @@ and open the template in the editor.
 }
 
 .tab-content {
-    padding: 10px;
+    display: inline-block;
     position: relative;
+    z-index: 1;
 }
 
 body {
@@ -146,6 +147,7 @@ body {
     width: 700px;
     height: 310px;
     float:left;
+      z-index: 2;
 }
 
 .overlay{
@@ -161,5 +163,5 @@ body {
 
 .hint{
     height: 50px;
-      z-index: 2;
+      z-index: 3;
 }
