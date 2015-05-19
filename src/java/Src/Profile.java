@@ -30,6 +30,15 @@ public class Profile {
 	/** The global score. */
 	private int globalScore = 5;
 	
+        /*
+    * PROFILE HINTS
+    */
+    private boolean FreezeBGColour = false;
+    private int ChangeGFContrast = 1;
+    private int ChangeFontSize = 1;
+    private boolean FreezeFGFonts = false;
+
+	
 	/** The kernels. */
 	private Hashtable kernels;
 	
@@ -74,12 +83,62 @@ public class Profile {
 	/**
 	 * Adds the varaiable.
 	 *
-	 * @param var the var
+     * @param kernelName
+	 */
+    public void removeKernel(String kernelName) {
+		kernels.remove(kernelName);
+	}
+
+	/**
+	 * Adds the variable.
+	 *
+	 * @param var the variable to be added to the solutionattributes hashtable
 	 */
 	public void addVariable(SolutionAttributes var) {
 		solutionAttributes.put(var.getName(), var);
 	}
 
+        public void removeVariable(String varname)
+        {
+            solutionAttributes.remove(varname);
+        }
+
+        public boolean isFreezeBGColour() {
+        return FreezeBGColour;
+    }
+
+    public void setFreezeBGColour(boolean FreezeBGColour) {
+        this.FreezeBGColour = FreezeBGColour;
+    }
+
+    public int getChangeGFContrast() {
+        return ChangeGFContrast;
+    }
+
+    public void setChangeGFContrast(int ChangeGFContrast) {
+        this.ChangeGFContrast = ChangeGFContrast;
+    }
+
+    public int getChangeFontSize() {
+        return ChangeFontSize;
+    }
+
+    public void setChangeFontSize(int ChangeFontSize) {
+        this.ChangeFontSize = ChangeFontSize;
+    }
+
+    public boolean isFreezeFGFonts() {
+        return FreezeFGFonts;
+    }
+
+    public void setFreezeFGFonts(boolean FreezeFGFonts) {
+        this.FreezeFGFonts = FreezeFGFonts;
+    }
+
+
+        
+        
+        
 	/**
 	 * Gets the file.
 	 *
