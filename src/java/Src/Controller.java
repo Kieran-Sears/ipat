@@ -15,7 +15,10 @@ import Algorithms.HintsProcessor;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Vector;
+import java.lang.IllegalAccessException;
 
 /**
  *
@@ -29,6 +32,7 @@ public class Controller {
     Profile leader = null;
     ESEvolution evolution = new ESEvolution();
     Vector<ResultItem> data = new Vector<ResultItem>();
+    Hashtable hints;
     long lastTime = 0;
 
     // From GlobalVariables
@@ -99,6 +103,7 @@ public class Controller {
         public void initialArtifacts() {
         bootstrapApplication();
         loadRawArtifacts();
+        loadHints();
         evolution.updateWorkingMemory(currentGenerationOfProfiles);
         evolution.generateNextSolutions(noOfProfiles);
         for(int i=0;i < noOfProfiles;i++)
@@ -120,7 +125,19 @@ public class Controller {
             //TODO test this before  and after
         for(int i=0;i < noOfProfiles;i++)
             {
-            currentGenerationOfProfiles[i] = myHintsProcessor.InterpretHintInProfile(currentGenerationOfProfiles[i]);
+              //I'm putting the code explicitly in here for now - need sorting out but first I want to deal with more generic hints
+              HintsProcessor hint;
+              //first two hints use boolean values
+              hint = (HintsProcessor)hints.get("FreezeBGColour");
+              if (currentGenerationOfProfiles[i].isFreezeBGColour())
+                  currentGenerationOfProfiles[i] = hint.InterpretHintInProfile(currentGenerationOfProfiles[i],1);
+              hint = (HintsProcessor)hints.get("FreezeFGFonts");
+              if (currentGenerationOfProfiles[i].isFreezeBGColour())
+                  currentGenerationOfProfiles[i] = hint.InterpretHintInProfile(currentGenerationOfProfiles[i],1);
+              hint = (HintsProcessor)hints.get("ChangeFontSize");
+              currentGenerationOfProfiles[i] = hint.InterpretHintInProfile(currentGenerationOfProfiles[i],currentGenerationOfProfiles[i].getChangeFontSize());
+              hint = (HintsProcessor)hints.get("ChangeFGContrast");
+              currentGenerationOfProfiles[i] = hint.InterpretHintInProfile(currentGenerationOfProfiles[i], currentGenerationOfProfiles[i].getChangeFGContrast());
             }
         //tell the metaheuristic to update its working memory
         evolution.updateWorkingMemory(currentGenerationOfProfiles);
@@ -251,4 +268,33 @@ public class Controller {
         }
     }
 
+    
+    private void loadHints()
+      {
+        HintsProcessor freezeBGcolours = new HintsProcessor("FreezeBGColours", "onOff","Freeze Background",  0.0, 1.0, 0.0, "freeze");
+        freezeBGcolours.addAffectedProfileVariable("Page_bg_Red");
+        freezeBGcolours.addAffectedProfileVariable("Page_bg_Blue");
+        freezeBGcolours.addAffectedProfileVariable("Page_bg_Green");
+        hints.put("FreezeBGColours",freezeBGcolours);
+        
+        
+        HintsProcessor FreezeFGFonts = new HintsProcessor("FreezeFGFonts", "onOff","Freeze Text",  0.0, 1.0, 0.0, "freeze");
+        FreezeFGFonts.AddAffectedKernel("h1");
+        FreezeFGFonts.AddAffectedKernel("h2");
+        FreezeFGFonts.AddAffectedKernel("p");
+        hints.put("FreezeFGFonts",FreezeFGFonts);
+        
+        HintsProcessor ChangeFGContrast = new HintsProcessor("ChangeFGContrast", "slider","Change Text Contrast",  0.0, 2.0, 1.0, "moderateByValue");
+        ChangeFGContrast.AddAffectedKernel("h1");
+        ChangeFGContrast.AddAffectedKernel("h2");
+        ChangeFGContrast.AddAffectedKernel("p");
+        ChangeFGContrast.addAffectedKernelVariable("bold");
+        ChangeFGContrast.addAffectedKernelVariable("italic");
+        
+        HintsProcessor ChangeFontSize = new HintsProcessor("ChangeFontSize", "slider","Change Text Size",  0.0, 2.0, 1.0, "moderateByValue");
+        ChangeFontSize.AddAffectedKernel("h1");
+        ChangeFontSize.AddAffectedKernel("h2");
+        ChangeFontSize.AddAffectedKernel("p");
+        ChangeFontSize.addAffectedKernelVariable("font-size");
+      }
 }

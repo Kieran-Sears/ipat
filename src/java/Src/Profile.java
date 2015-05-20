@@ -34,7 +34,7 @@ public class Profile {
     * PROFILE HINTS
     */
     private boolean FreezeBGColour = false;
-    private int ChangeGFContrast = 1;
+    private int ChangeFGContrast = 1;
     private int ChangeFontSize = 1;
     private boolean FreezeFGFonts = false;
 
@@ -89,8 +89,21 @@ public class Profile {
 		kernels.remove(kernelName);
 	}
 
+    /**
+     *
+     * @param kernelName string 
+     * @return Kernel with the name kernelName if that key-value pair exists in thisProfile.kernels else null
+     */
+    public Kernel getKernelCalled(String kernelName)
+      {
+        Kernel found = null;
+        found = (Kernel) kernels.get(kernelName);
+        return found;
+      }
+    
+    
 	/**
-	 * Adds the variable.
+	 * Adds the profile level variable to the hashtable in thisProfile
 	 *
 	 * @param var the variable to be added to the solutionattributes hashtable
 	 */
@@ -98,39 +111,75 @@ public class Profile {
 		solutionAttributes.put(var.getName(), var);
 	}
 
-        public void removeVariable(String varname)
+    /**
+     *
+     * @param varname
+     */
+    public void removeVariable(String varname)
         {
             solutionAttributes.remove(varname);
         }
 
-        public boolean isFreezeBGColour() {
+    /**
+     *
+     * @return
+     */
+    public boolean isFreezeBGColour() {
         return FreezeBGColour;
     }
 
+    /**
+     *
+     * @param FreezeBGColour
+     */
     public void setFreezeBGColour(boolean FreezeBGColour) {
         this.FreezeBGColour = FreezeBGColour;
     }
 
-    public int getChangeGFContrast() {
-        return ChangeGFContrast;
+    /**
+     *
+     * @return
+     */
+    public int getChangeFGContrast() {
+        return ChangeFGContrast;
     }
 
-    public void setChangeGFContrast(int ChangeGFContrast) {
-        this.ChangeGFContrast = ChangeGFContrast;
+    /**
+     *
+     * @param ChangeFGContrast
+     */
+    public void setChangeFGContrast(int ChangeFGContrast) {
+        this.ChangeFGContrast = ChangeFGContrast;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getChangeFontSize() {
         return ChangeFontSize;
     }
 
+    /**
+     *
+     * @param ChangeFontSize
+     */
     public void setChangeFontSize(int ChangeFontSize) {
         this.ChangeFontSize = ChangeFontSize;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isFreezeFGFonts() {
         return FreezeFGFonts;
     }
 
+    /**
+     *
+     * @param FreezeFGFonts
+     */
     public void setFreezeFGFonts(boolean FreezeFGFonts) {
         this.FreezeFGFonts = FreezeFGFonts;
     }
@@ -148,7 +197,11 @@ public class Profile {
 		return file;
 	}
         
-        public void setFile(File thisfile)
+    /**
+     *
+     * @param thisfile
+     */
+    public void setFile(File thisfile)
         {
             file = thisfile;
         }
@@ -238,6 +291,10 @@ public class Profile {
 		}
 	}
 
+    /**
+     *
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -546,6 +603,11 @@ public class Profile {
 	}
 }
 
+    /**
+     *
+     * @param outputPath
+     * @return
+     */
     public boolean writeProfileToFile(String outputPath) {
         String copy = "";
         File file = this.getFile();
